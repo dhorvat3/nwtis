@@ -19,4 +19,38 @@ public class Evidencija implements Serializable{
     ArrayList zahtjeviZaAdrese = new ArrayList();
     
     //TODO dovršiti za ostale podakte 
+
+    public int getUkupnoZahtjeva() {
+        return ukupnoZahtjeva;
+    }
+
+    public void setUkupnoZahtjeva(int ukupnoZahtjeva) {
+        this.ukupnoZahtjeva = ukupnoZahtjeva;
+    }
+
+    public int getBrojUspjesnihZahtjeva() {
+        return brojUspjesnihZahtjeva;
+    }
+
+    public void setBrojUspjesnihZahtjeva(int brojUspjesnihZahtjeva) {
+        this.brojUspjesnihZahtjeva = brojUspjesnihZahtjeva;
+    }
+
+    public int getBrojPrekinutihZahtjeva() {
+        return brojPrekinutihZahtjeva;
+    }
+
+    public void setBrojPrekinutihZahtjeva(int brojPrekinutihZahtjeva) {
+        this.brojPrekinutihZahtjeva = brojPrekinutihZahtjeva;
+    }
+
+    public ArrayList getZahtjeviZaAdrese() {
+        return zahtjeviZaAdrese;
+    }
+
+    public void setZahtjeviZaAdrese(ArrayList zahtjeviZaAdrese) {
+        this.zahtjeviZaAdrese = zahtjeviZaAdrese;
+    }
+    
+    
 }

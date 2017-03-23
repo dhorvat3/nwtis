@@ -5,7 +5,13 @@
  */
 package org.foi.nwtis.dhorvat3.zadaca_1;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -22,43 +28,107 @@ import org.foi.nwtis.dhorvat3.konfiguracije.NemaKonfiguracije;
  * @author Davorin Horvat
  */
 public class ServerSustava {
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         String sintaksa = "^-konf ([^\\s]+\\.(?i))(txt|xml|bin)( +-load)?$";
-        
+
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < args.length; i++){
+        for (int i = 0; i < args.length; i++) {
             builder.append(args[i]).append(" ");
         }
         String p = builder.toString().trim();
         Pattern pattern = Pattern.compile(sintaksa);
         Matcher matcher = pattern.matcher(p);
         boolean status = matcher.matches();
-        if(status){
+        if (status) {
             int poc = 0;
             int kraj = matcher.groupCount();
-            for (int i = poc; i <= kraj; i++){
+            for (int i = poc; i <= kraj; i++) {
                 System.out.println(i + ". " + matcher.group(i));
             }
-            
+            ServerSustava server = new ServerSustava();
             String nazivDatoteke = matcher.group(1) + matcher.group(2);
             boolean trebaUcitatiEvidenciju = false;
-            if(matcher.group(3) != null){
-                trebaUcitatiEvidenciju = true;
+            System.out.println();
+            if (matcher.group(3) != null) {
+                if(" -load".equals(matcher.group(3))){
+                    trebaUcitatiEvidenciju = true;
+                } else {
+                    try {
+                        Konfiguracija konfig = KonfiguracijaApstraktna.preuzmiKonfiguraciju(nazivDatoteke);
+                        String evidDatoteka = konfig.dajPostavku("evidDatoteka");
+                        server.serializirajPodatke(evidDatoteka);
+                    } catch (NemaKonfiguracije ex) {
+                        Logger.getLogger(ServerSustava.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (NeispravnaKonfiguracija ex) {
+                        Logger.getLogger(ServerSustava.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
-            
-            ServerSustava server = new ServerSustava();
+
+            //ServerSustava server = new ServerSustava();
             server.pokreniServer(nazivDatoteke, trebaUcitatiEvidenciju);
         } else {
             System.out.println("Pogrešna naredba!");
         }
     }
+
+    private void serializirajPodatke(String nazivDatoteke){
+        Evidencija evidencija = new Evidencija();
+        evidencija.setBrojPrekinutihZahtjeva(3);
+        evidencija.setBrojUspjesnihZahtjeva(5);
+        evidencija.setUkupnoZahtjeva(3);
+        evidencija.setZahtjeviZaAdrese(null);
+        
+        try {
+            FileOutputStream outputStream = new FileOutputStream(nazivDatoteke);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            
+            objectOutputStream.writeObject(evidencija);
+            objectOutputStream.close();
+            outputStream.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ServerSustava.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServerSustava.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
-    private void pokreniServer(String nazivDatoteke, boolean trebaUcitatiEvidenciju){
+    private void pokreniServer(String nazivDatoteke, boolean trebaUcitatiEvidenciju) {
         try {
             Konfiguracija konfig = KonfiguracijaApstraktna.preuzmiKonfiguraciju(nazivDatoteke);
             int port = Integer.parseInt(konfig.dajPostavku("port"));
             ServerSocket serverSocket = new ServerSocket(port);
-            
+            //Učitavanje evidencije
+            if (trebaUcitatiEvidenciju) {
+                String evidDatoteka = konfig.dajPostavku("evidDatoteka");
+
+                if (evidDatoteka == null || evidDatoteka.length() == 0) {
+                    //TODO regex naziva datoteke
+                    System.out.println("Naziv datoteke nije ispravan;");
+                }
+
+                Evidencija evidencija = new Evidencija();
+                File f = new File(evidDatoteka);
+                if (f.exists() && !f.isDirectory()) {
+                    try {
+                        Logger.getLogger(ServerSustava.class.getName()).log(Level.FINE, null, "Deserijalizacija podataka.");
+                        try (FileInputStream inputStream = new FileInputStream(evidDatoteka); ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
+                            evidencija = (Evidencija) objectInputStream.readObject();
+                        }
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(ServerSustava.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    Logger.getLogger(ServerSustava.class.getName()).log(Level.INFO, null, "Deserijalizacija završena");
+                    Logger.getLogger(ServerSustava.class.getName()).log(Level.INFO, null, "Broj prekinutih zahtjeva: " + evidencija.getBrojPrekinutihZahtjeva());
+                    Logger.getLogger(ServerSustava.class.getName()).log(Level.INFO, "Broj uspješnih zahtjeva: " + evidencija.getBrojUspjesnihZahtjeva());
+                    Logger.getLogger(ServerSustava.class.getName()).log(Level.INFO, "Ukupno zahtjeva: " + evidencija.getUkupnoZahtjeva());
+                    Logger.getLogger(ServerSustava.class.getName()).log(Level.INFO, "Zahtjevi za adrese: " + evidencija.getZahtjeviZaAdrese());
+                } else {
+                    System.out.println("Datoteka ne postoji!");
+                }
+            }
+
             NadzorDretvi nadzorDretvi = new NadzorDretvi(konfig);
             nadzorDretvi.start();
             RezervnaDretva rezervnaDretva = new RezervnaDretva(konfig);
@@ -67,15 +137,14 @@ public class ServerSustava {
             provjeraAdresa.start();
             SerijalizatorEvidencije serijalizatorEvidencije = new SerijalizatorEvidencije(konfig);
             serijalizatorEvidencije.start();
-            
-            while(true){
+
+            while (true) {
                 Socket socket = serverSocket.accept();
                 RadnaDretva radnaDretva = new RadnaDretva(socket);
-                
+
                 //TODO dodaj dretvu u kolekciju aktivnih radnih dretvi
-                
                 radnaDretva.start();
-                
+
                 //TODO treba provjeriti ima li "mjesta" za novu radnu dretvu
             }
         } catch (NemaKonfiguracije | NeispravnaKonfiguracija | IOException ex) {
