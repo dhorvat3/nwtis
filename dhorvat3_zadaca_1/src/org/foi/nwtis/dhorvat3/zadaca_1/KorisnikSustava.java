@@ -34,7 +34,9 @@ public class KorisnikSustava {
         Korisnik user = korisnik.provjeriParametre(parametri);
         
         if(user != null){
-            String odgovor = user.posaljiNaredbu("USER pero; ADD 192.168.1.1;");
+            //TODO dohvatiti naredbu od korisnika
+            //String odgovor = user.posaljiNaredbu("USER pero; ADD 192.168.1.1;");
+            String odgovor = user.posaljiNaredbu("USER korisnik; PASSWD lozinka; STOP;");
             System.out.println("Odgovor: " + odgovor);
         }
     }
@@ -134,6 +136,7 @@ public class KorisnikSustava {
             //TODO Srediti za akcije na serveru
         } else if(parametri.startsWith("-admin")){
             String reAdmin = "-admin.*?-server.*?"; //-korinsnik
+            //TODO ili adresa
             String reIP = "((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))(?![\\d])";//Ipv4
             String rePort = ".*?-port.*?"; //-port
             String rePortNum = "(\\d{4})"; //port
@@ -162,7 +165,9 @@ public class KorisnikSustava {
                     System.out.println("Akcija: " + matcher.group(5));
                 }
                 //TODO ADMIN
-                return null;
+                AdministratorSustava administratorSustava = new AdministratorSustava();
+                administratorSustava.pokreniKorisnika(matcher.group(1), Integer.parseInt(matcher.group(2)));
+                return administratorSustava;
             }else {
                 return null;
             }
