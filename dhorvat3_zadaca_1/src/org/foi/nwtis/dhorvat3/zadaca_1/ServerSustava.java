@@ -24,7 +24,18 @@ import org.foi.nwtis.dhorvat3.konfiguracije.NeispravnaKonfiguracija;
 import org.foi.nwtis.dhorvat3.konfiguracije.NemaKonfiguracije;
 
 /**
- *
+ * Prvo se provjeravaju upisane opcije, preporučuje se koristiti dopuštene izraze.
+ * Učitavaju se postavke iz datoteke. Server kreira i pokreće nadzornu dretvu (klasa NadzorDretvi),
+ * kreira i pokreće adresnu dretvu (klasa ProvjeraAdresa), kreira i pokreće 
+ * rezervnu dretvu (klasa RezervnaDretva), kreira i pokreće dretvu za serijalizaciju evidencije 
+ * (klasa SerijalizatorEvidencije). Otvara se ServerSocket (slično primjerima ClientTester.java 
+ * i TinyHttpd.java s 4. predavanja) na izabranom portu i čeka zahtjev korisnika u beskonačnoj petlji. 
+ * Kada se korisnik spoji na otvorenu vezu, kreira se objekt dretve klase RadnaDretva, veza se predaje 
+ * objektu i pokreće se izvršavanje dretve. Dretve opslužuju zahtjev korisnika. Dretva nakon što obradi 
+ * pridruženi zahtjev korisnika završava svoj rad i briše se.  Ako nema raspoložive radne dretve, izvođenje 
+ * se prebacuje na rezervnu dretvu koja vraća korisniku informaciju o nepostojanju slobodne radne dretve 
+ * tako da korisniku vraća odgovor ERROR 20; tekst (tekst objašnjava razlog pogreške). Nakon toga server 
+ * ponovno čeka na uspostavljanje veze i postupak se nastavlja. 
  * @author Davorin Horvat
  */
 public class ServerSustava {
@@ -129,14 +140,14 @@ public class ServerSustava {
                 }
             }
 
-            NadzorDretvi nadzorDretvi = new NadzorDretvi(konfig);
+            /*NadzorDretvi nadzorDretvi = new NadzorDretvi(konfig);
             nadzorDretvi.start();
             RezervnaDretva rezervnaDretva = new RezervnaDretva(konfig);
             rezervnaDretva.start();
             ProvjeraAdresa provjeraAdresa = new ProvjeraAdresa(konfig);
             provjeraAdresa.start();
             SerijalizatorEvidencije serijalizatorEvidencije = new SerijalizatorEvidencije(konfig);
-            serijalizatorEvidencije.start();
+            serijalizatorEvidencije.start();*/
 
             while (true) {
                 Socket socket = serverSocket.accept();
