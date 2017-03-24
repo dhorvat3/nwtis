@@ -42,12 +42,20 @@ public class KorisnikSustava {
             while (odgovor == null || "exit".equals(naredba)) {
                 if (user instanceof PregledSustava) {
                     naredba = parametri;
+                    Evidencija evidencija;
+                    evidencija = (Evidencija) user.posaljiNaredbu(naredba);
+                    System.out.println("--- EVIDENCIJA ---");
+                    System.out.println("Broj prekinutih zahtjeva: " + evidencija.getBrojPrekinutihZahtjeva());
+                    System.out.println("Broj uspješnih zahtjeva: " + evidencija.getBrojUspjesnihZahtjeva());
+                    System.out.println("Ukupno zahtjeva: " + evidencija.getUkupnoZahtjeva());
+                    System.out.println("Zahtjevi za adrese: " + evidencija.getZahtjeviZaAdrese());
+                    break;
                 } else {
                     System.out.println("Unesite naredbu: ");
                     naredba = scanner.nextLine();
+                    odgovor = user.posaljiNaredbu(naredba).toString();
+                    System.out.println("Odgovor: " + odgovor);
                 }
-                odgovor = user.posaljiNaredbu(naredba);
-                System.out.println("Odgovor: " + odgovor);
             }
         }
     }

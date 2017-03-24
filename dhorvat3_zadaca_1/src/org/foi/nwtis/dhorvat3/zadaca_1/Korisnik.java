@@ -12,5 +12,5 @@ package org.foi.nwtis.dhorvat3.zadaca_1;
  * @author Davorin Horvat
  */
 public interface Korisnik {
-    public String posaljiNaredbu(String naredba);
+    public Object posaljiNaredbu(String naredba);
 }
