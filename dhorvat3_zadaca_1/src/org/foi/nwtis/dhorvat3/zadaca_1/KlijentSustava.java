@@ -35,7 +35,7 @@ public class KlijentSustava extends KorisnikApstraktni{
         String reUser = "USER.*?"; //USER 
         String reKorisnik = "((?:[a-z][a-z]*[0-9]*[a-z0-9_,-]*));.*?";
         String reNaredba = "(ADD|TEST|WAIT).*?";
-        String reVrijednost = "(((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))(?![\\d])|(\\d{4}));";
+        String reVrijednost = "(((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))(?![\\d])|(\\d{1,5}));";
         
         pattern = Pattern.compile(reUser + reKorisnik + reNaredba + reVrijednost);
         matcher = pattern.matcher(naredba);
@@ -56,17 +56,13 @@ public class KlijentSustava extends KorisnikApstraktni{
      * @param naredba
      * @return Odgovor sa servera
      */
-    //TODO bacanje iznimki umjesto null vrijednosti
     @Override
     public String posaljiNaredbu(String naredba){
         if(provjeriNaredbu(naredba)){
             String akcija = matcher.group(2);
             String vrijednost = matcher.group(3);
-            
-            if(vrijednost.length() == 4 && !akcija.equals("WAIT"))
+            if(vrijednost.length() <= 5 && !akcija.equals("WAIT"))
                 return "Naredbi " + akcija + " nije proslijeđena adresa!";
-            
-            //System.out.println("Ispravna naredba");
             try {
                 if(getOutputStream() != null){
                     getOutputStream().write(naredba.getBytes());

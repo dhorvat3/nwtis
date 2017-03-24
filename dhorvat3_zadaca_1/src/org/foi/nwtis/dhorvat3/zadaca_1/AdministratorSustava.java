@@ -26,9 +26,10 @@ public class AdministratorSustava extends KorisnikApstraktni {
     private Matcher matcher;
 
     /**
-     * Provjerava korisnikovu naredbu. Moguće naredbe: USER korisnik; PASSWD
-     * lozinka; PAUSE; USER korisnik; PASSWD lozinka; START; USER korisnik;
-     * PASSWD lozinka; STOP;
+     * Provjerava korisnikovu naredbu. Moguće naredbe: 
+     * USER korisnik; PASSWD lozinka; PAUSE;
+     * USER korisnik; PASSWD lozinka; START;
+     * USER korisnik; PASSWD lozinka; STOP;
      *
      * @return ispravna naredba
      */
@@ -36,7 +37,8 @@ public class AdministratorSustava extends KorisnikApstraktni {
         String reUser = "USER.*?";
         String reKorisnik = "((?:[a-z][a-z]*[0-9]*[a-z0-9_,-]*));.*?";
         String rePasswd = "PASSWD.*?";
-        String reLozinka = "((?:[a-z][a-z]*[0-9]*[a-z0-9_,-]*));.*?";
+        //String reLozinka = "((?:[a-z][a-z]*[0-9]*[a-z0-9_,-]*));.*?";
+        String reLozinka = "([a-zA-Z0-9_]);.*?";
         String reNaredba = "(PAUSE|START|STOP);";
 
         pattern = Pattern.compile(reUser + reKorisnik + rePasswd + reLozinka + reNaredba);

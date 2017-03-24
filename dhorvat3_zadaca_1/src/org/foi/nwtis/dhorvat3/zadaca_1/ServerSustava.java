@@ -16,6 +16,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -42,6 +43,7 @@ import org.foi.nwtis.dhorvat3.konfiguracije.NemaKonfiguracije;
  */
 public class ServerSustava {
     private HashMap<String, Object> adrese = new HashMap<>();
+    private AtomicBoolean pause = new AtomicBoolean(false);
     
     public static void main(String[] args) {
         String sintaksa = "^-konf ([^\\s]+\\.(?i))(txt|xml|bin)( +-load)?$";
@@ -150,12 +152,12 @@ public class ServerSustava {
 
             while (true) {
                 Socket socket = serverSocket.accept();
-                RadnaDretva radnaDretva = new RadnaDretva(socket, adrese);
+                RadnaDretva radnaDretva = new RadnaDretva(socket, adrese, konfig.dajPostavku("adminDatoteka"), pause);
                 
 
                 //TODO dodaj dretvu u kolekciju aktivnih radnih dretvi
                 radnaDretva.start();
-
+                
                 //TODO treba provjeriti ima li "mjesta" za novu radnu dretvu
             }
         } catch (NemaKonfiguracije | NeispravnaKonfiguracija | IOException ex) {

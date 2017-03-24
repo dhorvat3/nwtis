@@ -5,12 +5,18 @@
  */
 package org.foi.nwtis.dhorvat3.zadaca_1;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -24,10 +30,14 @@ public class RadnaDretva extends Thread {
 
     private Socket socket;
     private HashMap<String, Object> adrese = null;
+    private String datotekaAdmin;
+    private AtomicBoolean pause;
 
-    public RadnaDretva(Socket socket, HashMap<String, Object> adrese) {
+    public RadnaDretva(Socket socket, HashMap<String, Object> adrese, String datotekaAdmin, AtomicBoolean pause) {
         this.socket = socket;
         this.adrese = adrese;
+        this.datotekaAdmin = datotekaAdmin;
+        this.pause = pause;
     }
 
     @Override
@@ -40,10 +50,8 @@ public class RadnaDretva extends Thread {
         //TODO preuzeti trenutno vrijeme u milisekundama
         System.out.println(this.getClass());
 
-        String sintaksa_admin = "^USER ([^\\s]+); PASSWD ([^\\s]+); (PAUSE|STOP|START|STAT);$";
+        String sintaksa_admin = "USER ([^\\s]+); PASSWD ([^\\s]+); (PAUSE|STOP|START|STAT);";
         String sintaksa_korisnik = "USER ([^\\s]+); (ADD|TEST|WAIT) ([^\\s]+);";
-        String sintaksa_korisnik_2 = "USER ([^\\s]+); TEST ([^\\s]+);";
-        String sintaksa_korisnik_3 = "USER ([^\\s]+); WAIT ([^\\s]+);";
 
         InputStream inputStream = null;
         OutputStream outputStream = null;
@@ -70,9 +78,13 @@ public class RadnaDretva extends Thread {
                 //TODO dovršiti za admina
                 odgovor = obradiAdministratora(matcher);
             } else {
-                pattern = Pattern.compile(sintaksa_korisnik);
-                matcher = pattern.matcher(stringBuffer);
-                odgovor = obradiKorisnika(matcher);
+                if(!pause.get()){
+                    pattern = Pattern.compile(sintaksa_korisnik);
+                    matcher = pattern.matcher(stringBuffer);
+                    odgovor = obradiKorisnika(matcher);
+                } else {
+                    odgovor = "Server u stanju PAUSE!";
+                }
             }
             if(odgovor == null){
                 odgovor = "Neispravna naredba! Naredba: " + stringBuffer;
@@ -103,20 +115,59 @@ public class RadnaDretva extends Thread {
             if (matcher.group(2).equals("ADD")) {
                 adrese.put(matcher.group(1), matcher.group(3));
                 odgovor = "OK; " + adrese.toString();
+            } else if(matcher.group(2).equals("WAIT")){
+                try {
+                    RadnaDretva.sleep(2000);
+                    odgovor = "OK;";
+                } catch (InterruptedException ex) {
+                    odgovor = "ERROR 13; Dretva nije uspijela izvrsiti naredbu!";
+                    //Logger.getLogger(RadnaDretva.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else {
                 odgovor = "Nije implementirano";
             }
         }
-
+        System.out.println("Odgovor: " + odgovor);
         return odgovor;
     }
     
     private String obradiAdministratora(Matcher matcher){
         String odgovor = null;
+        if(provjeriPodatke(matcher.group(1), matcher.group(2))){
+            if(matcher.group(3).equals("PAUSE")){
+                if(pause.get()){
+                    odgovor = "ERROR 01; Server je vec u stanju PAUSE!";
+                } else {
+                    pause.set(true);
+                    odgovor = "OK;";
+                }
+            }
+        } else {
+            odgovor = "ERROR 00; Pogresno korisnicko ime ili lozinka!";
+        }
         
         return odgovor;
     }
 
+    private boolean provjeriPodatke(String username, String pass){
+        File file = new File(datotekaAdmin);
+        boolean prijavljen = false;
+        try(BufferedReader br = new BufferedReader(new FileReader(file))){
+            String line;
+            while((line = br.readLine()) != null){
+                String[] korisnik = line.split(";");
+                if(username.equals(korisnik[0]) && pass.equals(korisnik[1])){
+                    prijavljen = true;
+                    break;
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(RadnaDretva.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return prijavljen;
+    }
+    
     @Override
     public synchronized void start() {
         super.start(); //To change body of generated methods, choose Tools | Templates.
