@@ -37,7 +37,7 @@ public class RadnaDretva extends Thread {
         System.out.println(this.getClass());
 
         String sintaksa_admin = "^USER ([^\\s]+); PASSWD ([^\\s]+); (PAUSE|STOP|START|STAT);$";
-        String sintaksa_korisnik_1 = "USER ([^\\s]+); ADD ([^\\s]+);";
+        String sintaksa_korisnik = "USER ([^\\s]+); (ADD|TEST|WAIT) ([^\\s]+);";
         String sintaksa_korisnik_2 = "USER ([^\\s]+); TEST ([^\\s]+);";
         String sintaksa_korisnik_3 = "USER ([^\\s]+); WAIT ([^\\s]+);";
 
@@ -65,20 +65,11 @@ public class RadnaDretva extends Thread {
             if (status) {
                 //TODO dovršiti za admina
             } else {
-                pattern = Pattern.compile(sintaksa_korisnik_1);
+                pattern = Pattern.compile(sintaksa_korisnik);
                 matcher = pattern.matcher(stringBuffer);
                 status = matcher.matches();
-                if (status) {
-                    //TODO dovršiti za korisnika 1. slučaj
-                } else {
-                    pattern = Pattern.compile(sintaksa_korisnik_2);
-                    matcher = pattern.matcher(stringBuffer);
-                    status = matcher.matches();
-                    if (status) {
-                        //TODO dovršiti za korisnika 2. slučaj
-                    } else {
-                        //TODO i tako za ostale slučajeve
-                    }
+                if(status){
+                    //TODO dovršiti za korisnika
                 }
             }
 

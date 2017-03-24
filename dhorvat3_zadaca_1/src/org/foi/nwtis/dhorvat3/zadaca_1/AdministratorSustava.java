@@ -50,7 +50,12 @@ public class AdministratorSustava extends KorisnikApstraktni{
         this.naredba = naredba;
         return provjeriNaredbu();
     }
-    
+    /**
+     * Metoda obrađuje naredbu. Ako je ispravno upisana šalje ju na server.
+     * @param naredba
+     * @return Odgovor sa servera
+     */
+    //TODO bacanje iznimki umjesto null vrijednosti
     @Override
     public String posaljiNaredbu(String naredba){
         if(provjeriNaredbu(naredba)){

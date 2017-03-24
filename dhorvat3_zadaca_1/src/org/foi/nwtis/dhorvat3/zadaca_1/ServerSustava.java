@@ -69,15 +69,11 @@ public class ServerSustava {
                         Konfiguracija konfig = KonfiguracijaApstraktna.preuzmiKonfiguraciju(nazivDatoteke);
                         String evidDatoteka = konfig.dajPostavku("evidDatoteka");
                         server.serializirajPodatke(evidDatoteka);
-                    } catch (NemaKonfiguracije ex) {
-                        Logger.getLogger(ServerSustava.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (NeispravnaKonfiguracija ex) {
+                    } catch (NemaKonfiguracije | NeispravnaKonfiguracija ex) {
                         Logger.getLogger(ServerSustava.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
-
-            //ServerSustava server = new ServerSustava();
             server.pokreniServer(nazivDatoteke, trebaUcitatiEvidenciju);
         } else {
             System.out.println("Pogrešna naredba!");
@@ -132,9 +128,9 @@ public class ServerSustava {
                     }
                     Logger.getLogger(ServerSustava.class.getName()).log(Level.INFO, null, "Deserijalizacija završena");
                     Logger.getLogger(ServerSustava.class.getName()).log(Level.INFO, null, "Broj prekinutih zahtjeva: " + evidencija.getBrojPrekinutihZahtjeva());
-                    Logger.getLogger(ServerSustava.class.getName()).log(Level.INFO, "Broj uspješnih zahtjeva: " + evidencija.getBrojUspjesnihZahtjeva());
-                    Logger.getLogger(ServerSustava.class.getName()).log(Level.INFO, "Ukupno zahtjeva: " + evidencija.getUkupnoZahtjeva());
-                    Logger.getLogger(ServerSustava.class.getName()).log(Level.INFO, "Zahtjevi za adrese: " + evidencija.getZahtjeviZaAdrese());
+                    Logger.getLogger(ServerSustava.class.getName()).log(Level.INFO, null, "Broj uspješnih zahtjeva: " + evidencija.getBrojUspjesnihZahtjeva());
+                    Logger.getLogger(ServerSustava.class.getName()).log(Level.INFO, null, "Ukupno zahtjeva: " + evidencija.getUkupnoZahtjeva());
+                    Logger.getLogger(ServerSustava.class.getName()).log(Level.INFO, null, "Zahtjevi za adrese: " + evidencija.getZahtjeviZaAdrese());
                 } else {
                     System.out.println("Datoteka ne postoji!");
                 }

@@ -60,7 +60,6 @@ public class KlijentSustava extends KorisnikApstraktni{
     @Override
     public String posaljiNaredbu(String naredba){
         if(provjeriNaredbu(naredba)){
-            //String korisnik = matcher.group(1);
             String akcija = matcher.group(2);
             String vrijednost = matcher.group(3);
             
