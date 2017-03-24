@@ -31,6 +31,7 @@ public class RadnaDretva extends Thread {
     private Socket socket;
     private HashMap<String, Object> adrese = null;
     private String datotekaAdmin;
+    //private AtomicBoolean pause;
     private AtomicBoolean pause;
 
     public RadnaDretva(Socket socket, HashMap<String, Object> adrese, String datotekaAdmin, AtomicBoolean pause) {
@@ -140,6 +141,14 @@ public class RadnaDretva extends Thread {
                 } else {
                     pause.set(true);
                     odgovor = "OK;";
+                }
+            }
+            if(matcher.group(3).endsWith("START")){
+                if(pause.get()){
+                    pause.set(false);
+                    odgovor = "OK;";
+                } else {
+                    odgovor = "ERROR 02; Server nije u stanju PAUSE!";
                 }
             }
         } else {
