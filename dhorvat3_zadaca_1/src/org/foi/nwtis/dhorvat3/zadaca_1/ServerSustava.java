@@ -14,6 +14,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -39,7 +41,8 @@ import org.foi.nwtis.dhorvat3.konfiguracije.NemaKonfiguracije;
  * @author Davorin Horvat
  */
 public class ServerSustava {
-
+    private HashMap<String, Object> adrese = new HashMap<>();
+    
     public static void main(String[] args) {
         String sintaksa = "^-konf ([^\\s]+\\.(?i))(txt|xml|bin)( +-load)?$";
 
@@ -147,7 +150,8 @@ public class ServerSustava {
 
             while (true) {
                 Socket socket = serverSocket.accept();
-                RadnaDretva radnaDretva = new RadnaDretva(socket);
+                RadnaDretva radnaDretva = new RadnaDretva(socket, adrese);
+                
 
                 //TODO dodaj dretvu u kolekciju aktivnih radnih dretvi
                 radnaDretva.start();

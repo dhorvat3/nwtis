@@ -63,11 +63,10 @@ public class KlijentSustava extends KorisnikApstraktni{
             String akcija = matcher.group(2);
             String vrijednost = matcher.group(3);
             
-            if(vrijednost.length() == 4 && !akcija.equals("WAIT")){
-                System.out.println("Naredbi " + akcija + " nije proslijeđena adresa!");
-                return null;
-            }
-            System.out.println("Ispravna naredba");
+            if(vrijednost.length() == 4 && !akcija.equals("WAIT"))
+                return "Naredbi " + akcija + " nije proslijeđena adresa!";
+            
+            //System.out.println("Ispravna naredba");
             try {
                 if(getOutputStream() != null){
                     getOutputStream().write(naredba.getBytes());
@@ -84,16 +83,14 @@ public class KlijentSustava extends KorisnikApstraktni{
                     ugasiKorisnika();
                     return stringBuffer.toString();
                 } else {
-                    return null;
+                    return "Greška kod slanja zahtjeva!";
                 }
             } catch (IOException ex) {
                 Logger.getLogger(KlijentSustava.class.getName()).log(Level.SEVERE, null, ex);
             }
-            return null;
-        } else {
-            System.out.println("Neispravna naredba");
+            return "Greška kod slanja zahtjeva!";
         }
         
-        return null;
+        return "Neispravna naredba!";
     }
 }

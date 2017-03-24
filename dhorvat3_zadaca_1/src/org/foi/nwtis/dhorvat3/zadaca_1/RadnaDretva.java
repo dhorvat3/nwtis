@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -21,9 +23,11 @@ import java.util.regex.Pattern;
 public class RadnaDretva extends Thread {
 
     private Socket socket;
+    private HashMap<String, Object> adrese = null;
 
-    public RadnaDretva(Socket socket) {
+    public RadnaDretva(Socket socket, HashMap<String, Object> adrese) {
         this.socket = socket;
+        this.adrese = adrese;
     }
 
     @Override
@@ -43,6 +47,7 @@ public class RadnaDretva extends Thread {
 
         InputStream inputStream = null;
         OutputStream outputStream = null;
+        String odgovor = null;
 
         try {
             inputStream = socket.getInputStream();
@@ -61,19 +66,18 @@ public class RadnaDretva extends Thread {
             //TODO provjeri ispravnost primljenog zahtjeva
             Pattern pattern = Pattern.compile(sintaksa_admin);
             Matcher matcher = pattern.matcher(stringBuffer);
-            boolean status = matcher.matches();
-            if (status) {
+            if (matcher.matches()) {
                 //TODO dovršiti za admina
+                odgovor = obradiAdministratora(matcher);
             } else {
                 pattern = Pattern.compile(sintaksa_korisnik);
                 matcher = pattern.matcher(stringBuffer);
-                status = matcher.matches();
-                if(status){
-                    //TODO dovršiti za korisnika
-                }
+                odgovor = obradiKorisnika(matcher);
             }
-
-            outputStream.write("OK;".getBytes());
+            if(odgovor == null){
+                odgovor = "Neispravna naredba! Naredba: " + stringBuffer;
+            }
+            outputStream.write(odgovor.getBytes());
             outputStream.flush();
         } catch (IOException ex) {
             Logger.getLogger(RadnaDretva.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,7 +87,7 @@ public class RadnaDretva extends Thread {
                 if (inputStream != null) {
                     inputStream.close();
                 }
-                if(outputStream != null){
+                if (outputStream != null) {
                     outputStream.close();
                 }
                 socket.close();
@@ -91,6 +95,26 @@ public class RadnaDretva extends Thread {
                 Logger.getLogger(RadnaDretva.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    private String obradiKorisnika(Matcher matcher) {
+        String odgovor = null;
+        if (matcher.matches()) {
+            if (matcher.group(2).equals("ADD")) {
+                adrese.put(matcher.group(1), matcher.group(3));
+                odgovor = "OK; " + adrese.toString();
+            } else {
+                odgovor = "Nije implementirano";
+            }
+        }
+
+        return odgovor;
+    }
+    
+    private String obradiAdministratora(Matcher matcher){
+        String odgovor = null;
+        
+        return odgovor;
     }
 
     @Override
