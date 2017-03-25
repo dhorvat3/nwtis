@@ -18,6 +18,9 @@ import java.util.regex.Pattern;
 import org.foi.nwtis.dhorvat3.konfiguracije.Konfiguracija;
 
 /**
+ * Kreira se konstruktor klase u koji se prenose podaci konfiguracije. Služi za
+ * provjeru zadanih adresa u pravilnim vremenskim ciklusima. Potrebno je voditi
+ * brigu o međusobnom isključivanju dretvi kod pristupa evidenciji rada i sl.
  *
  * @author Davorin Horvat
  */
@@ -64,7 +67,7 @@ public class ProvjeraAdresa extends Thread {
                             connection.setRequestMethod("HEAD");
                             int code = connection.getResponseCode();
                             //System.out.println("CODE: " + code);
-                            if(code == 200){
+                            if (code == 200) {
                                 red.setProvjereno(true);
                             }
                         } catch (MalformedURLException ex) {

@@ -16,24 +16,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *  Prvo se provjeravaju upisane opcije, preporučuje se koristiti dopuštene izraze. 
- * Otvara i čita datoteku sa serijaliziranim podacima evidencije i ispisuje ih u 
- * prikladnom/čitljivom i formatiranom obliku na ekran/standardni izlaz korisnika.
+ * Prvo se provjeravaju upisane opcije, preporučuje se koristiti dopuštene
+ * izraze. Otvara i čita datoteku sa serijaliziranim podacima evidencije i
+ * ispisuje ih u prikladnom/čitljivom i formatiranom obliku na ekran/standardni
+ * izlaz korisnika.
+ *
  * @author Davorin Horvat
  */
-public class PregledSustava implements Korisnik{
-    private String naredba;
+public class PregledSustava implements Korisnik {
+
     private Pattern pattern;
     private Matcher matcher;
-    
-    private boolean provjeriNaredbu(){
-        return false;
-    }
-    
-    private boolean provjeriNaredbu(String naredba){
-        this.naredba = naredba;
-        return provjeriNaredbu();
-    }
 
     @Override
     public Evidencija posaljiNaredbu(String naredba) {
@@ -42,16 +35,23 @@ public class PregledSustava implements Korisnik{
         String reDatoteka = "([^\\s]+\\.(?i))(txt|xml|bin)";
         pattern = Pattern.compile(rePrikaz + reDatoteka);
         matcher = pattern.matcher(naredba);
-        if(matcher.matches()){
+        if (matcher.matches()) {
             return deserijalizirajBin(matcher.group(1) + matcher.group(2));
         }
         return null;
     }
-    private Evidencija deserijalizirajBin(String nazivDatoteke){
+
+    /**
+     * Deserijalizacija binarne datoteke
+     *
+     * @param nazivDatoteke
+     * @return Evidencija iz datoteke
+     */
+    private Evidencija deserijalizirajBin(String nazivDatoteke) {
         Evidencija evidencija = new Evidencija();
         File f = new File(nazivDatoteke);
-        if(f.exists() && !f.isDirectory()){
-            try{
+        if (f.exists() && !f.isDirectory()) {
+            try {
                 FileInputStream inputStream = new FileInputStream(nazivDatoteke);
                 ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                 evidencija = (Evidencija) objectInputStream.readObject();
@@ -61,7 +61,7 @@ public class PregledSustava implements Korisnik{
                 Logger.getLogger(PregledSustava.class.getName()).log(Level.SEVERE, null, ex);
             }
             return evidencija;
-            
+
         }
         return null;
     }

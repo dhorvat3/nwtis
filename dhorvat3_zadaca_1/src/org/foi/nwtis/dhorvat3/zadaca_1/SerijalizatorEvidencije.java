@@ -8,10 +8,15 @@ package org.foi.nwtis.dhorvat3.zadaca_1;
 import org.foi.nwtis.dhorvat3.konfiguracije.Konfiguracija;
 
 /**
+ * Kreira se konstruktor klase u koji se prenose podaci konfiguracije. Služi za
+ * serijalizaciju podataka. Izvršava serijalizaciju evidencije prema potrebi, a
+ * u međuvremenu čeka. Potrebno je voditi brigu o međusobnom isključivanju
+ * dretvi kod pristupa evidenciji rada i sl.
  *
  * @author Davorin Horvat
  */
-public class SerijalizatorEvidencije extends Thread{
+public class SerijalizatorEvidencije extends Thread {
+
     Konfiguracija konfig;
 
     public SerijalizatorEvidencije(Konfiguracija konfig) {
@@ -25,7 +30,7 @@ public class SerijalizatorEvidencije extends Thread{
 
     @Override
     public void run() {
-        
+
         //TODO dovršite sami
     }
 
@@ -33,6 +38,5 @@ public class SerijalizatorEvidencije extends Thread{
     public synchronized void start() {
         super.start(); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
+
 }

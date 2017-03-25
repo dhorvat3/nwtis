@@ -26,10 +26,9 @@ public class AdministratorSustava extends KorisnikApstraktni {
     private Matcher matcher;
 
     /**
-     * Provjerava korisnikovu naredbu. Moguće naredbe: 
-     * USER korisnik; PASSWD lozinka; PAUSE;
-     * USER korisnik; PASSWD lozinka; START;
-     * USER korisnik; PASSWD lozinka; STOP;
+     * Provjerava korisnikovu naredbu. Moguće naredbe: USER korisnik; PASSWD
+     * lozinka; PAUSE; USER korisnik; PASSWD lozinka; START; USER korisnik;
+     * PASSWD lozinka; STOP;
      *
      * @return ispravna naredba
      */

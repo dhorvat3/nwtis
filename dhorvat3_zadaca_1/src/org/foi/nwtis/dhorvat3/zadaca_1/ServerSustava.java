@@ -27,28 +27,34 @@ import org.foi.nwtis.dhorvat3.konfiguracije.NeispravnaKonfiguracija;
 import org.foi.nwtis.dhorvat3.konfiguracije.NemaKonfiguracije;
 
 /**
- * Prvo se provjeravaju upisane opcije, preporučuje se koristiti dopuštene izraze.
- * Učitavaju se postavke iz datoteke. Server kreira i pokreće nadzornu dretvu (klasa NadzorDretvi),
- * kreira i pokreće adresnu dretvu (klasa ProvjeraAdresa), kreira i pokreće 
- * rezervnu dretvu (klasa RezervnaDretva), kreira i pokreće dretvu za serijalizaciju evidencije 
- * (klasa SerijalizatorEvidencije). Otvara se ServerSocket (slično primjerima ClientTester.java 
- * i TinyHttpd.java s 4. predavanja) na izabranom portu i čeka zahtjev korisnika u beskonačnoj petlji. 
- * Kada se korisnik spoji na otvorenu vezu, kreira se objekt dretve klase RadnaDretva, veza se predaje 
- * objektu i pokreće se izvršavanje dretve. Dretve opslužuju zahtjev korisnika. Dretva nakon što obradi 
- * pridruženi zahtjev korisnika završava svoj rad i briše se.  Ako nema raspoložive radne dretve, izvođenje 
- * se prebacuje na rezervnu dretvu koja vraća korisniku informaciju o nepostojanju slobodne radne dretve 
- * tako da korisniku vraća odgovor ERROR 20; tekst (tekst objašnjava razlog pogreške). Nakon toga server 
- * ponovno čeka na uspostavljanje veze i postupak se nastavlja. 
+ * Prvo se provjeravaju upisane opcije, preporučuje se koristiti dopuštene
+ * izraze. Učitavaju se postavke iz datoteke. Server kreira i pokreće nadzornu
+ * dretvu (klasa NadzorDretvi), kreira i pokreće adresnu dretvu (klasa
+ * ProvjeraAdresa), kreira i pokreće rezervnu dretvu (klasa RezervnaDretva),
+ * kreira i pokreće dretvu za serijalizaciju evidencije (klasa
+ * SerijalizatorEvidencije). Otvara se ServerSocket (slično primjerima
+ * ClientTester.java i TinyHttpd.java s 4. predavanja) na izabranom portu i čeka
+ * zahtjev korisnika u beskonačnoj petlji. Kada se korisnik spoji na otvorenu
+ * vezu, kreira se objekt dretve klase RadnaDretva, veza se predaje objektu i
+ * pokreće se izvršavanje dretve. Dretve opslužuju zahtjev korisnika. Dretva
+ * nakon što obradi pridruženi zahtjev korisnika završava svoj rad i briše se.
+ * Ako nema raspoložive radne dretve, izvođenje se prebacuje na rezervnu dretvu
+ * koja vraća korisniku informaciju o nepostojanju slobodne radne dretve tako da
+ * korisniku vraća odgovor ERROR 20; tekst (tekst objašnjava razlog pogreške).
+ * Nakon toga server ponovno čeka na uspostavljanje veze i postupak se
+ * nastavlja.
+ *
  * @author Davorin Horvat
  */
 public class ServerSustava {
+
     private HashMap<String, Object> adrese = new HashMap<>();
     private Evidencija evidencija = new Evidencija();
     private AtomicBoolean pause = new AtomicBoolean(false);
     private ArrayList<RadnaDretva> radneDretve = new ArrayList<>();
     private int brojDozvoljenih = 0;
     private Konfiguracija konfig;
-    
+
     public static void main(String[] args) {
         String sintaksa = "^-konf ([^\\s]+\\.(?i))(txt|xml|bin)( +-load)?$";
 
@@ -71,7 +77,7 @@ public class ServerSustava {
             boolean trebaUcitatiEvidenciju = false;
             System.out.println();
             if (matcher.group(3) != null) {
-                if(" -load".equals(matcher.group(3))){
+                if (" -load".equals(matcher.group(3))) {
                     trebaUcitatiEvidenciju = true;
                 } else {
                     try {
@@ -89,17 +95,22 @@ public class ServerSustava {
         }
     }
 
-    private void serializirajPodatke(String nazivDatoteke){
+    /**
+     * Serijalizacija evidencije u datoteku.
+     *
+     * @param nazivDatoteke
+     */
+    private void serializirajPodatke(String nazivDatoteke) {
         Evidencija evidencija = new Evidencija();
         evidencija.setBrojPrekinutihZahtjeva(3);
         evidencija.setBrojUspjesnihZahtjeva(5);
         evidencija.setUkupnoZahtjeva(3);
         evidencija.setZahtjeviZaAdrese(null);
-        
+
         try {
             FileOutputStream outputStream = new FileOutputStream(nazivDatoteke);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-            
+
             objectOutputStream.writeObject(evidencija);
             objectOutputStream.close();
             outputStream.close();
@@ -109,7 +120,13 @@ public class ServerSustava {
             Logger.getLogger(ServerSustava.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    /**
+     * Pokreće server na temelju konfiguracijske datoteke.
+     *
+     * @param nazivDatoteke
+     * @param trebaUcitatiEvidenciju
+     */
     private void pokreniServer(String nazivDatoteke, boolean trebaUcitatiEvidenciju) {
         try {
             konfig = KonfiguracijaApstraktna.preuzmiKonfiguraciju(nazivDatoteke);
@@ -160,14 +177,14 @@ public class ServerSustava {
             provjeraAdresa.start();
             while (true) {
                 Socket socket = serverSocket.accept();
-                if(radneDretve.size() <= brojDozvoljenih){
+                if (radneDretve.size() <= brojDozvoljenih) {
                     RadnaDretva radnaDretva = new RadnaDretva(socket, evidencija, konfig.dajPostavku("adminDatoteka"), pause);
                     radneDretve.add(radnaDretva);
-                
+
                     radnaDretva.start();
                     provjeraAdresa.setEvidencija(evidencija);
                 }
-                
+
                 //TODO treba provjeriti ima li "mjesta" za novu radnu dretvu
             }
         } catch (NemaKonfiguracije | NeispravnaKonfiguracija | IOException ex) {

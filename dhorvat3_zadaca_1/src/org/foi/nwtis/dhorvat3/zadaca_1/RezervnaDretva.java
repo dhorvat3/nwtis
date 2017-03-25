@@ -10,6 +10,10 @@ import java.util.logging.Logger;
 import org.foi.nwtis.dhorvat3.konfiguracije.Konfiguracija;
 
 /**
+ * Kreira se konstruktor klase u koji se prenose podaci konfiguracije. Služi za
+ * slučaj kada nema slobodne radne dretve kako bi se moglo javiti korisniku. Ona
+ * ne završava svoj nego čega do sljedećeg poziva. Potrebno je voditi brigu o
+ * međusobnom isključivanju dretvi kod pristupa evidenciji rada i sl.
  *
  * @author Davorin Horvat
  */
@@ -42,7 +46,7 @@ public class RezervnaDretva extends Thread {
                 Logger.getLogger(RezervnaDretva.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
         //TODO razmisliti kako izaći iz beskonačne petlje
     }
 

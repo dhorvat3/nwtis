@@ -10,6 +10,9 @@ import java.util.logging.Logger;
 import org.foi.nwtis.dhorvat3.konfiguracije.Konfiguracija;
 
 /**
+ * Kreira se konstruktor klase u koji se prenose podaci konfiguracije. Služi za
+ * nadzor radnih dretvi u pravilnim vremenskim ciklusima. Potrebno je voditi
+ * brigu o međusobnom isključivanju dretvi kod pristupa evidenciji rada i sl.
  *
  * @author Davorin Horvat
  */
@@ -48,10 +51,9 @@ public class NadzorDretvi extends Thread {
         }
     }
 
-@Override
-        public synchronized void start() {
+    @Override
+    public synchronized void start() {
         super.start(); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
+
 }

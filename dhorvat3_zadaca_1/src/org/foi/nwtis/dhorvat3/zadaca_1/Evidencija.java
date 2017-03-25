@@ -9,17 +9,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
+ * Klasa evidencije sustava.
  *
  * @author Davorin Horvat
  */
-public class Evidencija implements Serializable{
+public class Evidencija implements Serializable {
+
     int ukupnoZahtjeva = 0;
     int brojUspjesnihZahtjeva = 0;
     int brojPrekinutihZahtjeva = 0;
     ArrayList<ZahtjeviAdresa> zahtjeviZaAdrese = new ArrayList();
-    
-    //TODO dovršiti za ostale podakte 
 
+    //TODO dovršiti za ostale podakte 
     public int getUkupnoZahtjeva() {
         return ukupnoZahtjeva;
     }
@@ -51,6 +52,5 @@ public class Evidencija implements Serializable{
     public void setZahtjeviZaAdrese(ArrayList<ZahtjeviAdresa> zahtjeviZaAdrese) {
         this.zahtjeviZaAdrese = zahtjeviZaAdrese;
     }
-    
-    
+
 }

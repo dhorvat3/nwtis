@@ -14,20 +14,23 @@ import java.util.logging.Logger;
 
 /**
  * Apstraktna klasa koja sadrži metode za spajanje i prekid veze sa serverom.
+ *
  * @author Davorin Horvat
  */
-public abstract class KorisnikApstraktni implements Korisnik{
+public abstract class KorisnikApstraktni implements Korisnik {
+
     private InputStream inputStream = null;
     private OutputStream outputStream = null;
     private Socket socket = null;
-    
+
     /**
      * Povezivanje sa serverom
+     *
      * @param nazivServera
-     * @param port 
+     * @param port
      */
-    public void pokreniKorisnika(String nazivServera, int port){
-        try{
+    public void pokreniKorisnika(String nazivServera, int port) {
+        try {
             socket = new Socket(nazivServera, port);
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
@@ -35,19 +38,19 @@ public abstract class KorisnikApstraktni implements Korisnik{
             Logger.getLogger(KorisnikApstraktni.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * Prekidanje veze sa serverom
      */
-    public void ugasiKorisnika(){
+    public void ugasiKorisnika() {
         try {
-            if(inputStream != null){
+            if (inputStream != null) {
                 inputStream.close();
             }
-            if(outputStream != null){
+            if (outputStream != null) {
                 outputStream.close();
             }
-            if(socket != null){
+            if (socket != null) {
                 socket.close();
             }
         } catch (IOException ex) {
@@ -78,5 +81,5 @@ public abstract class KorisnikApstraktni implements Korisnik{
     public void setSocket(Socket socket) {
         this.socket = socket;
     }
-    
+
 }

@@ -9,9 +9,11 @@ import java.util.Date;
 
 /**
  * Klasa za zahtjeve adresa.
+ *
  * @author Davorin Horvat
  */
 public class ZahtjeviAdresa {
+
     String Korisnik;
     String adresa;
     boolean provjereno;
@@ -26,8 +28,6 @@ public class ZahtjeviAdresa {
         this.provjereno = provjereno;
         this.zadnjaProvjera = zadnjaProvjera;
     }
-    
-    
 
     public String getKorisnik() {
         return Korisnik;
@@ -60,6 +60,5 @@ public class ZahtjeviAdresa {
     public void setZadnjaProvjera(Date zadnjaProvjera) {
         this.zadnjaProvjera = zadnjaProvjera;
     }
-    
-    
+
 }
