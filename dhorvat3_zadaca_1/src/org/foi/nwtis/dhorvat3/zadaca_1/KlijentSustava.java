@@ -35,7 +35,7 @@ public class KlijentSustava extends KorisnikApstraktni{
         String reUser = "USER.*?"; //USER 
         String reKorisnik = "((?:[a-z][a-z]*[0-9]*[a-z0-9_,-]*));.*?";
         String reNaredba = "(ADD|TEST|WAIT).*?";
-        String reVrijednost = "(((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))(?![\\d])|(\\d{1,5}));";
+        String reVrijednost = "(((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))(?![\\d])|(\\d{1,5})|((https|http?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?));";
         
         pattern = Pattern.compile(reUser + reKorisnik + reNaredba + reVrijednost);
         matcher = pattern.matcher(naredba);
@@ -61,6 +61,7 @@ public class KlijentSustava extends KorisnikApstraktni{
         if(provjeriNaredbu(naredba)){
             String akcija = matcher.group(2);
             String vrijednost = matcher.group(3);
+            System.out.println("Vrijednost: " + vrijednost);
             if(vrijednost.length() <= 5 && !akcija.equals("WAIT"))
                 return "Naredbi " + akcija + " nije proslijeđena adresa!";
             try {

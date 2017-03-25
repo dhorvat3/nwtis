@@ -45,6 +45,9 @@ public class ServerSustava {
     private HashMap<String, Object> adrese = new HashMap<>();
     private Evidencija evidencija = new Evidencija();
     private AtomicBoolean pause = new AtomicBoolean(false);
+    private ArrayList<RadnaDretva> radneDretve = new ArrayList<>();
+    private int brojDozvoljenih = 0;
+    private Konfiguracija konfig;
     
     public static void main(String[] args) {
         String sintaksa = "^-konf ([^\\s]+\\.(?i))(txt|xml|bin)( +-load)?$";
@@ -109,9 +112,10 @@ public class ServerSustava {
     
     private void pokreniServer(String nazivDatoteke, boolean trebaUcitatiEvidenciju) {
         try {
-            Konfiguracija konfig = KonfiguracijaApstraktna.preuzmiKonfiguraciju(nazivDatoteke);
+            konfig = KonfiguracijaApstraktna.preuzmiKonfiguraciju(nazivDatoteke);
             int port = Integer.parseInt(konfig.dajPostavku("port"));
             ServerSocket serverSocket = new ServerSocket(port);
+            brojDozvoljenih = Integer.parseInt(konfig.dajPostavku("maksBrojRadnihDretvi"));
             //Učitavanje evidencije
             if (trebaUcitatiEvidenciju) {
                 String evidDatoteka = konfig.dajPostavku("evidDatoteka");
@@ -150,15 +154,19 @@ public class ServerSustava {
             provjeraAdresa.start();
             SerijalizatorEvidencije serijalizatorEvidencije = new SerijalizatorEvidencije(konfig);
             serijalizatorEvidencije.start();*/
+            RezervnaDretva rezervnaDretva = new RezervnaDretva(konfig);
+            rezervnaDretva.start();
             ProvjeraAdresa provjeraAdresa = new ProvjeraAdresa(konfig);
             provjeraAdresa.start();
             while (true) {
                 Socket socket = serverSocket.accept();
-                RadnaDretva radnaDretva = new RadnaDretva(socket, evidencija, konfig.dajPostavku("adminDatoteka"), pause);
+                if(radneDretve.size() <= brojDozvoljenih){
+                    RadnaDretva radnaDretva = new RadnaDretva(socket, evidencija, konfig.dajPostavku("adminDatoteka"), pause);
+                    radneDretve.add(radnaDretva);
                 
-
-                //TODO dodaj dretvu u kolekciju aktivnih radnih dretvi
-                radnaDretva.start();
+                    radnaDretva.start();
+                    provjeraAdresa.setEvidencija(evidencija);
+                }
                 
                 //TODO treba provjeriti ima li "mjesta" za novu radnu dretvu
             }

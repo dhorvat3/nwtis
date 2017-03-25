@@ -15,7 +15,7 @@ import org.foi.nwtis.dhorvat3.konfiguracije.Konfiguracija;
  */
 public class RezervnaDretva extends Thread {
 
-    Konfiguracija konfig;
+    private Konfiguracija konfig;
 
     public RezervnaDretva(Konfiguracija konfig) {
         this.konfig = konfig;
@@ -28,10 +28,10 @@ public class RezervnaDretva extends Thread {
 
     @Override
     public void run() {
-        int trajanjeSpavanje = Integer.parseInt(konfig.dajPostavku("intervalAdresneDretve"));
+        int trajanjeSpavanje = Integer.parseInt(konfig.dajPostavku("intervaAdresneDretve"));
 
         while (true) {
-            System.out.println(this.getClass());
+            //System.out.println(this.getClass());
 
             long trenutnoVrijeme = System.currentTimeMillis();
             //TODO dovršite sami

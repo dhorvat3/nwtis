@@ -54,11 +54,16 @@ public class RadnaDretva extends Thread {
         System.out.println(this.getClass());
 
         String sintaksa_admin = "USER ([^\\s]+); PASSWD ([^\\s]+); (PAUSE|STOP|START|STAT);";
-        String sintaksa_korisnik = "USER ([^\\s]+); (ADD|TEST|WAIT) ([^\\s]+);";
+        //String reUser = "USER.*?"; //USER 
+        //String reKorisnik = "((?:[a-z][a-z]*[0-9]*[a-z0-9_,-]*));.*?";
+        //String reNaredba = "(ADD|TEST|WAIT).*?";
+        //String reVrijednost = "(((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))(?![\\d])|(?:http|https)(?::\\\\/{2}[\\\\w]+)(?:[\\\\/|\\\\.]?)(?:[^\\\\s\"]*)|(\\d{1,5}));";
+        String sintaksa_korisnik = "USER ([^\\s]+); (ADD|TEST|WAIT) ([^\\s]+|.*);";
+        //String sintaksa_korisnik = reUser + reKorisnik + reNaredba + reVrijednost;
 
         InputStream inputStream = null;
         OutputStream outputStream = null;
-        String odgovor = null;
+        String odgovor = "";
         Matcher matcher = null;
 
         try {
@@ -91,7 +96,7 @@ public class RadnaDretva extends Thread {
                     odgovor = "Server u stanju PAUSE!";
                 }
             }
-            if(odgovor == null){
+            if("".equals(odgovor)){
                 odgovor = "Neispravna naredba! Naredba: " + stringBuffer;
             }
             outputStream.write(odgovor.getBytes());
@@ -120,7 +125,7 @@ public class RadnaDretva extends Thread {
     }
 
     private String obradiKorisnika(Matcher matcher) {
-        String odgovor = null;
+        String odgovor = "";
         if (matcher.matches()) {
             if (matcher.group(2).equals("ADD")) {
                 ZahtjeviAdresa zahtjev = new ZahtjeviAdresa(matcher.group(1), matcher.group(3), false, null);
