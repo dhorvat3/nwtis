@@ -43,6 +43,7 @@ import org.foi.nwtis.dhorvat3.konfiguracije.NemaKonfiguracije;
  */
 public class ServerSustava {
     private HashMap<String, Object> adrese = new HashMap<>();
+    private Evidencija evidencija = new Evidencija();
     private AtomicBoolean pause = new AtomicBoolean(false);
     
     public static void main(String[] args) {
@@ -120,7 +121,7 @@ public class ServerSustava {
                     System.out.println("Naziv datoteke nije ispravan;");
                 }
 
-                Evidencija evidencija = new Evidencija();
+                //Evidencija evidencija = new Evidencija();
                 File f = new File(evidDatoteka);
                 if (f.exists() && !f.isDirectory()) {
                     try {
@@ -149,10 +150,11 @@ public class ServerSustava {
             provjeraAdresa.start();
             SerijalizatorEvidencije serijalizatorEvidencije = new SerijalizatorEvidencije(konfig);
             serijalizatorEvidencije.start();*/
-
+            ProvjeraAdresa provjeraAdresa = new ProvjeraAdresa(konfig);
+            provjeraAdresa.start();
             while (true) {
                 Socket socket = serverSocket.accept();
-                RadnaDretva radnaDretva = new RadnaDretva(socket, adrese, konfig.dajPostavku("adminDatoteka"), pause);
+                RadnaDretva radnaDretva = new RadnaDretva(socket, evidencija, konfig.dajPostavku("adminDatoteka"), pause);
                 
 
                 //TODO dodaj dretvu u kolekciju aktivnih radnih dretvi

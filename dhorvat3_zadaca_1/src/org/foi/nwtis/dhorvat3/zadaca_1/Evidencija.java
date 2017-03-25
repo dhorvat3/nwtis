@@ -16,7 +16,7 @@ public class Evidencija implements Serializable{
     int ukupnoZahtjeva = 0;
     int brojUspjesnihZahtjeva = 0;
     int brojPrekinutihZahtjeva = 0;
-    ArrayList zahtjeviZaAdrese = new ArrayList();
+    ArrayList<ZahtjeviAdresa> zahtjeviZaAdrese = new ArrayList();
     
     //TODO dovršiti za ostale podakte 
 
@@ -44,11 +44,11 @@ public class Evidencija implements Serializable{
         this.brojPrekinutihZahtjeva = brojPrekinutihZahtjeva;
     }
 
-    public ArrayList getZahtjeviZaAdrese() {
+    public ArrayList<ZahtjeviAdresa> getZahtjeviZaAdrese() {
         return zahtjeviZaAdrese;
     }
 
-    public void setZahtjeviZaAdrese(ArrayList zahtjeviZaAdrese) {
+    public void setZahtjeviZaAdrese(ArrayList<ZahtjeviAdresa> zahtjeviZaAdrese) {
         this.zahtjeviZaAdrese = zahtjeviZaAdrese;
     }
     

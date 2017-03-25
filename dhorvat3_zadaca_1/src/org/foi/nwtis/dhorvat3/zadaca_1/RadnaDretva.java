@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -29,14 +30,15 @@ import java.util.regex.Pattern;
 public class RadnaDretva extends Thread {
 
     private Socket socket;
-    private HashMap<String, Object> adrese = null;
+    //private HashMap<String, Object> adrese = null;
+    private Evidencija evidencija = null;
     private String datotekaAdmin;
     //private AtomicBoolean pause;
     private AtomicBoolean pause;
 
-    public RadnaDretva(Socket socket, HashMap<String, Object> adrese, String datotekaAdmin, AtomicBoolean pause) {
+    public RadnaDretva(Socket socket, Evidencija evidencija, String datotekaAdmin, AtomicBoolean pause) {
         this.socket = socket;
-        this.adrese = adrese;
+        this.evidencija = evidencija;
         this.datotekaAdmin = datotekaAdmin;
         this.pause = pause;
     }
@@ -57,10 +59,12 @@ public class RadnaDretva extends Thread {
         InputStream inputStream = null;
         OutputStream outputStream = null;
         String odgovor = null;
+        Matcher matcher = null;
 
         try {
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
+            
 
             StringBuffer stringBuffer = new StringBuffer();
             while (true) {
@@ -74,7 +78,7 @@ public class RadnaDretva extends Thread {
 
             //TODO provjeri ispravnost primljenog zahtjeva
             Pattern pattern = Pattern.compile(sintaksa_admin);
-            Matcher matcher = pattern.matcher(stringBuffer);
+            matcher = pattern.matcher(stringBuffer);
             if (matcher.matches()) {
                 //TODO dovršiti za admina
                 odgovor = obradiAdministratora(matcher);
@@ -92,6 +96,7 @@ public class RadnaDretva extends Thread {
             }
             outputStream.write(odgovor.getBytes());
             outputStream.flush();
+            
         } catch (IOException ex) {
             Logger.getLogger(RadnaDretva.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -104,9 +109,13 @@ public class RadnaDretva extends Thread {
                     outputStream.close();
                 }
                 socket.close();
+                if(odgovor.equals("OK;") && "STOP".equals(matcher.group(3))){
+                    System.exit(0);
+                }
             } catch (IOException ex) {
                 Logger.getLogger(RadnaDretva.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
         }
     }
 
@@ -114,8 +123,14 @@ public class RadnaDretva extends Thread {
         String odgovor = null;
         if (matcher.matches()) {
             if (matcher.group(2).equals("ADD")) {
-                adrese.put(matcher.group(1), matcher.group(3));
-                odgovor = "OK; " + adrese.toString();
+                ZahtjeviAdresa zahtjev = new ZahtjeviAdresa(matcher.group(1), matcher.group(3), false, null);
+                evidencija.getZahtjeviZaAdrese().add(zahtjev);
+                //ispis adresa
+                //String adrese = "\n";
+                //for(ZahtjeviAdresa red: evidencija.getZahtjeviZaAdrese()){
+                //    adrese += "--- " + red.getKorisnik() + " -> " + red.getAdresa() + "\n";
+                //}
+                odgovor = "OK; "; //+ adrese;
             } else if(matcher.group(2).equals("WAIT")){
                 try {
                     RadnaDretva.sleep(2000);
@@ -124,8 +139,16 @@ public class RadnaDretva extends Thread {
                     odgovor = "ERROR 13; Dretva nije uspijela izvrsiti naredbu!";
                     //Logger.getLogger(RadnaDretva.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            } else if (matcher.group(2).equals("TEST")) {
+                odgovor = "ERROR 12; Adresa nije upisana u sustav!";
+                for(ZahtjeviAdresa red: evidencija.getZahtjeviZaAdrese()){
+                    if(red.getAdresa().equals(matcher.group(3))){
+                        odgovor = red.isProvjereno() ? "OK; YES" : "OK; NO";
+                        break;
+                    }
+                }
             } else {
-                odgovor = "Nije implementirano";
+                odgovor = "ERROR 99; Nepostojeća naredba!";
             }
         }
         System.out.println("Odgovor: " + odgovor);
@@ -143,13 +166,17 @@ public class RadnaDretva extends Thread {
                     odgovor = "OK;";
                 }
             }
-            if(matcher.group(3).endsWith("START")){
+            if(matcher.group(3).equals("START")){
                 if(pause.get()){
                     pause.set(false);
                     odgovor = "OK;";
                 } else {
                     odgovor = "ERROR 02; Server nije u stanju PAUSE!";
                 }
+            }
+            if(matcher.group(3).equals("STOP")){
+                //TODO SERIJALIZACIJA PODATAKA
+                odgovor = "OK;";
             }
         } else {
             odgovor = "ERROR 00; Pogresno korisnicko ime ili lozinka!";
