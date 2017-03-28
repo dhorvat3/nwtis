@@ -1,0 +1,12 @@
+NWTIS konfiguracija
+jdbc:derby://localhost:1527/
+nwtis_g1
+g1_nwtis
+nwtis_g1
+nwtis_g1
+g1_nwtis
+nwtis_g1
+sun.jdbc.odbc.JdbcOdbcDriver
+com.mysql.jdbc.Driver
+org.apache.derby.jdbc.ClientDriver
+org.postgresql.Driver
