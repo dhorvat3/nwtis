@@ -5,6 +5,7 @@
  */
 package org.foi.nwtis.dhorvat3.web.dretve;
 
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.Folder;
@@ -21,7 +22,7 @@ import org.foi.nwtis.dhorvat3.konfiguracije.Konfiguracija;
  */
 public class ObradaPoruka extends Thread{
 
-    private ServletContext sc = null;
+    private ServletContext servletContext = null;
     private boolean stop = false;
     
     @Override
@@ -32,44 +33,38 @@ public class ObradaPoruka extends Thread{
 
     @Override
     public void run() {
-        Konfiguracija konf = (Konfiguracija) sc.getAttribute("Mail_Konfig");
-        String server = konf.dajPostavku("mail.server");
-        String port = konf.dajPostavku("mail.port");
-        String korisnik = konf.dajPostavku("mail.usernameThread");
-        String lozinka = konf.dajPostavku("mail.passwordThread");
-        int trajanjeCiklusa = Integer.parseInt(konf.dajPostavku("mail.timeSecThread"));
-        //TODO i za ostale pareametre
+        Konfiguracija konfig = (Konfiguracija) servletContext.getAttribute("Mail_Konfig");
+        String server = konfig.dajPostavku("mail.server");
+        String port = konfig.dajPostavku("mail.port");
+        String korisnik = konfig.dajPostavku("mail.usernameThread");
+        String lozinka = konfig.dajPostavku("mail.passwordThread");
+        int trajanjeCiklusa = Integer.parseInt(konfig.dajPostavku("mail.timeSecThread"));
+        //TODO I za ostale parametre
         int trajanjeObrade = 0;
-        //TODO odredi trajanje obrade
+        //TODO odrediti trajanje obrade
         int redniBrojCiklusa = 0;
-
-        while (!stop) {
+        
+        while(!stop){
             redniBrojCiklusa++;
             System.out.println("Ciklus dretve ObradaPoruka: " + redniBrojCiklusa);
-            try {
-
-                // Start the session
-                java.util.Properties properties = System.getProperties();
+            try{
+                Properties properties = System.getProperties();
                 properties.put("mail.smtp.host", server);
                 Session session = Session.getInstance(properties, null);
-
-                // Connect to the store
+                
                 Store store = session.getStore("imap");
                 store.connect(server, korisnik, lozinka);
-
-                // Open the INBOX folder
+                
                 Folder folder = store.getFolder("INBOX");
                 folder.open(Folder.READ_ONLY);
                 
                 Message[] messages = folder.getMessages();
-                for(int i=0; i < messages.length; ++i){
+                for (int i = 0; i < messages.length; i++) {
                     //TODO dovršiti čitanje, obradu i prebacivanje u mape
                 }
                 
                 sleep(trajanjeCiklusa * 1000 - trajanjeObrade);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ObradaPoruka.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (MessagingException ex) {
+            } catch (InterruptedException | MessagingException ex) {
                 Logger.getLogger(ObradaPoruka.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -79,8 +74,10 @@ public class ObradaPoruka extends Thread{
     public synchronized void start() {
         super.start(); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    public void setSc(ServletContext sc){
-        this.sc = sc;
+
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
     }
+    
+    
 }

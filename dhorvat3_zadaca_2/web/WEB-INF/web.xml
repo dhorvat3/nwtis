@@ -8,10 +8,6 @@
         <param-name>konfiguracija</param-name>
         <param-value>NWTiS.db.config_1.xml</param-value>
     </context-param>
-    <listener>
-        <description>ServletContextListener</description>
-        <listener-class>org.foi.nwtis.dhorvat3.web.slusaci.NewServletListener</listener-class>
-    </listener>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
