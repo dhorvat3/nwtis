@@ -5,8 +5,22 @@
  */
 package org.foi.nwtis.dhorvat3.web.zrna;
 
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.mail.Address;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletContext;
+import org.foi.nwtis.dhorvat3.konfiguracije.Konfiguracija;
 
 /**
  *
@@ -24,6 +38,9 @@ public class SlanjePoruke {
      * Creates a new instance of SlanjePoruke
      */
     public SlanjePoruke() {
+        ServletContext context = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        Konfiguracija konfig = (Konfiguracija) context.getAttribute("Mail_Konfig");
+        this.posluzitelj = konfig.dajPostavku("mail.server");
     }
 
     public String getPosluzitelj() {
@@ -66,8 +83,32 @@ public class SlanjePoruke {
         this.sadrzaj = sadrzaj;
     }
     
-    public String saljiPoruku(){
-        //TODO dodaj za slanje poruke prema primjeru s predavanja koje je priložen uz zadaću
+    public String saljiPoruku(){        
+        try{
+            Properties properties = System.getProperties();
+            properties.put("mail.mstp.host", this.posluzitelj);
+            
+            Session session = Session.getInstance(properties, null);
+            
+            MimeMessage message = new MimeMessage(session);
+            
+            Address fromAddress = new InternetAddress(this.salje);
+            message.setFrom(fromAddress);
+            
+            Address toAddress = new InternetAddress(this.prima);
+            message.setRecipient(Message.RecipientType.TO, toAddress);
+            
+            message.setSubject(this.predmet);
+            message.setText(this.sadrzaj);
+            
+            Transport.send(message);
+            
+        } catch (AddressException ex) {
+            Logger.getLogger(SlanjePoruke.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MessagingException ex) {
+            Logger.getLogger(SlanjePoruke.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         this.sadrzaj = "";
         this.predmet = "";
         this.prima = "";
