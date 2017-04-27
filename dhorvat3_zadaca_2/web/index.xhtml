@@ -6,16 +6,28 @@
     <f:view locale="#{lokalizacija.odabraniJezik}">
         <h:head>
             <title>#{m.index_naslov}</title>
+            <script
+                src="https://code.jquery.com/jquery-3.2.1.min.js"
+                integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="css/style.css" type="text/css"/>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         </h:head>
         <h:body>
-            <h:form>
-                <h:selectOneRadio value="#{lokalizacija.odabraniJezik}">
-                    <f:selectItems value="#{lokalizacija.izbornikJezika}" var="jezik" itemLabel="#{jezik.labela}" itemValue="#{jezik.vrijednost}">
-                    </f:selectItems>
-                </h:selectOneRadio>
-                <h:commandButton value="#{m.index_promjena}" action="#{lokalizacija.odaberiJezik}"/>
-                <h:commandLink value="#{m.index_saljiPoruku}" action="#{lokalizacija.saljiPoruku}"/>
-                <h:commandLink value="#{m.index_pregledPoruka}" action="#{lokalizacija.pregledPoruka}"/>
+            <h:form class="form-inline container">
+                <div class="btn-group container navbar-fixed-top">
+                    <h:commandLink type="button" class="btn btn-primary" value="#{m.index_saljiPoruku}" action="#{lokalizacija.saljiPoruku}"/>
+                    <h:commandLink type="button" class="btn btn-primary" value="#{m.index_pregledPoruka}" action="#{lokalizacija.pregledPoruka}"/>
+                </div>
+                <div class="user-input">
+                    <h:selectOneRadio class="language-selector" value="#{lokalizacija.odabraniJezik}">
+                        <f:selectItems value="#{lokalizacija.izbornikJezika}" var="jezik" itemLabel="#{jezik.labela}" itemValue="#{jezik.vrijednost}">
+                        </f:selectItems>
+                    </h:selectOneRadio>
+                    <h:commandButton class="btn btn-default" value="#{m.index_promjena}" action="#{lokalizacija.odaberiJezik}"/>
+                </div>
+
             </h:form>
         </h:body>
     </f:view>

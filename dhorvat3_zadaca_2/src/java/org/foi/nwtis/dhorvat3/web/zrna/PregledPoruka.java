@@ -38,7 +38,7 @@ public class PregledPoruka {
     private String lozinka;
 
     private ArrayList<Izbornik> mape = new ArrayList<>();
-    private String odabranaMapa;
+    private String odabranaMapa = "INBOX";
     private ArrayList<Poruka> poruke = new ArrayList<>();
     private int ukupnoPorukaMapa = 0;
     private int brojPirkazanihPoruka = 0;
@@ -94,7 +94,7 @@ public class PregledPoruka {
         //TODO razmisli o optimiranju preuzimanja poruka
 
         try {
-            Folder folder = store.getFolder("INBOX");
+            Folder folder = store.getFolder(odabranaMapa);
             folder.open(Folder.READ_ONLY);
 
             Message[] messages = folder.getMessages();

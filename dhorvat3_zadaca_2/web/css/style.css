@@ -1,0 +1,60 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Apr 27, 2017, 1:47:02 AM
+    Author     : Davorin Horvat
+*/
+
+label{
+    width: 10%;
+}
+.form-control{
+    min-width: 300px;
+}
+
+.sum-text{
+    font-size: 18px;
+    font-weight: bold;
+}
+.btn{
+    min-width: 130px;
+}
+
+.btn-group{
+    margin-bottom: 15px;
+}
+
+.user-input{
+    margin-bottom: 15px;
+    margin-top: 51px;
+}
+
+.user-input * {
+    margin-left: 15px;
+}
+
+.language-selector label{
+    margin-right: 10px;
+    margin-left: 5px;
+}
+
+.btn-send{
+    width: 35%;
+    margin-top: 15px;
+}
+@media screen and (max-width: 1022px){
+    label{
+        width: 20%;
+    }
+}
+@media screen and (max-width: 533px){
+    label{
+        width: 100%;
+    }
+    .btn-default{
+        width: 100%;
+    }
+}

@@ -6,24 +6,33 @@
     <f:view locale="#{lokalizacija.odabraniJezik}">
         <h:head>
             <title>Facelet Title</title>
+            <script
+                src="https://code.jquery.com/jquery-3.2.1.min.js"
+                integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="css/style.css" type="text/css"/>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         </h:head>
         <h:body>
-            <h:form>
-                <h:commandLink value="#{m.index_naslov}" action="#{pregledPoruka.promjenaJezika()}" />
-                <br />
-                <h:commandLink value="#{m.index_saljiPoruku}" action="#{pregledPoruka.saljiPoruku()}" />
-                <br />
-                <h:outputLabel value="Odaberi mapu: " />
-                <h:selectOneMenu value="#{pregledPoruka.odabranaMapa}" >
-                    <f:selectItems value="#{pregledPoruka.mape}" var="f" itemLabel="#{f.labela}" itemValue="#{f.vrijednost}" />
-                </h:selectOneMenu>
-                <h:commandButton value="Promjeni" action="#{pregledPoruka.promjenaMape()}"/>
-                <br />
-                <h:outputLabel value="Traži: " />
-                <h:inputText value="#{pregledPoruka.traziPoruke}" />
-                <h:commandButton value="Traži" action="#{pregledPoruka.traziPoruke()}" />
-                <br />
-                <h:dataTable value="#{pregledPoruka.poruke}" var="p">
+            <h:form class="form-inline container">
+                <div class="btn-group container navbar-fixed-top">
+                    <h:commandLink type="button" class="btn btn-primary" value="#{m.index_naslov}" action="#{pregledPoruka.promjenaJezika()}" />
+                    <h:commandLink type="button" class="btn btn-primary" value="#{m.index_saljiPoruku}" action="#{pregledPoruka.saljiPoruku()}" />
+                </div>
+                <div class="user-input">
+                    <h:outputLabel value="Odaberi mapu: " />
+                    <h:selectOneMenu class="form-control" value="#{pregledPoruka.odabranaMapa}" >
+                        <f:selectItems value="#{pregledPoruka.mape}" var="f" itemLabel="#{f.labela}" itemValue="#{f.vrijednost}" />
+                    </h:selectOneMenu>
+                    <h:commandButton class="btn btn-default" value="Promjeni" action="#{pregledPoruka.promjenaMape()}"/>
+                    <br />
+                    <h:outputLabel value="Traži: " />
+                    <h:inputText class="form-control" value="#{pregledPoruka.traziPoruke}" />
+                    <h:commandButton class="btn btn-default" value="Traži" action="#{pregledPoruka.traziPoruke()}" />
+                </div>
+
+                <h:dataTable class="table table-bordered" value="#{pregledPoruka.poruke}" var="p">
                     <h:column>
                         <f:facet name="header">ID</f:facet>
                         <h:outputText value="#{p.id}"/>
@@ -46,10 +55,16 @@
                     </h:column>
                 </h:dataTable>
                 <br />
-                <h:outputText value="Ukupno poruka: "/>
-                <h:outputText value="#{pregledPoruka.ukupnoPorukaMapa}" />
-                <h:commandButton value="Prethodne" action="#{pregledPoruka.prethodnePoruke()}" />
-                <h:commandButton value="Slijedeće" action="#{pregledPoruka.sljedecePoruke()}" />
+                <div class="row">
+                    <div class="col-sm-2 col-xs-6">
+                        <h:outputText class="sum-text" value="Ukupno poruka: "/>
+                        <h:outputText class="sum-text" value="#{pregledPoruka.ukupnoPorukaMapa}" />
+                    </div>
+                    <div class="col-sm-4 col-sm-offset-6 col-xs-6">
+                        <h:commandButton class="btn btn-info pull-right" value="Prethodne" action="#{pregledPoruka.prethodnePoruke()}" />
+                        <h:commandButton class="btn btn-info pull-right" value="Slijedeće" action="#{pregledPoruka.sljedecePoruke()}" />
+                    </div>
+                </div>
             </h:form>
         </h:body>
     </f:view>

@@ -6,26 +6,36 @@
     <f:view locale="#{lokalizacija.odabraniJezik}">
         <h:head>
             <title>#{m.slanjePoruke_naslov}</title>
+            <script
+                src="https://code.jquery.com/jquery-3.2.1.min.js"
+                integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="css/style.css" type="text/css"/>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         </h:head>
         <h:body>
-            <h:form>
-                <h:outputLabel value="#{m.slanjePoruke_salje}" />
-                <h:inputText value="#{slanjePoruke.salje}" />
-                <br />
-                <h:outputLabel value="#{m.slanjePoruke_prima}" />
-                <h:inputText value="#{slanjePoruke.prima}" />
-                <br />
-                <h:outputLabel value="#{m.slanjePoruke_predmet}" />
-                <h:inputText value="#{slanjePoruke.predmet}" />
-                <br />
-                <h:outputLabel value="#{m.slanjePoruke_sadrzaj}" />
-                <h:inputTextarea value="#{slanjePoruke.sadrzaj}" />
-                <br />
-                <h:commandButton value="#{m.slanjePoruke_salji}" action="#{slanjePoruke.saljiPoruku()}" />
-                <br />
-                <h:commandLink value="#{m.index_naslov}" action="#{slanjePoruke.promjenaJezika()}" />
-                <br />
-                <h:commandLink value="#{m.index_pregledPoruka}" action="#{slanjePoruke.pregledPoruka()}" />
+            <h:form class="form-inline container">
+                <div class="btn-group container navbar-fixed-top">
+                    <h:commandLink type="button" class="btn btn-primary" value="#{m.index_naslov}" action="#{slanjePoruke.promjenaJezika()}" />
+                    <h:commandLink type="button" class="btn btn-primary" value="#{m.index_pregledPoruka}" action="#{slanjePoruke.pregledPoruka()}" />
+                </div>
+                <div class="user-input">
+                    <h:outputLabel value="#{m.slanjePoruke_salje}" />
+                    <h:inputText class="form-control" value="#{slanjePoruke.salje}" />
+                    <br />
+                    <h:outputLabel value="#{m.slanjePoruke_prima}" />
+                    <h:inputText class="form-control" value="#{slanjePoruke.prima}" />
+                    <br />
+                    <h:outputLabel value="#{m.slanjePoruke_predmet}" />
+                    <h:inputText class="form-control" value="#{slanjePoruke.predmet}" />
+                    <br />
+                    <h:outputLabel value="#{m.slanjePoruke_sadrzaj}" />
+                    <h:inputTextarea class="form-control" value="#{slanjePoruke.sadrzaj}" />
+                    <br />
+                    <h:commandButton class="btn btn-default btn-send" value="#{m.slanjePoruke_salji}" action="#{slanjePoruke.saljiPoruku()}" />
+                </div>
+
             </h:form>
         </h:body>
     </f:view>
