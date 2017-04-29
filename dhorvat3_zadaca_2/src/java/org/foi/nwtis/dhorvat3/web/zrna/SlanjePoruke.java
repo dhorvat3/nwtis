@@ -5,6 +5,7 @@
  */
 package org.foi.nwtis.dhorvat3.web.zrna;
 
+import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -100,6 +101,7 @@ public class SlanjePoruke {
             
             message.setSubject(this.predmet);
             message.setText(this.sadrzaj);
+            message.setSentDate(new Date());
             
             Transport.send(message);
             
