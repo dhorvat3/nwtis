@@ -6,7 +6,7 @@
 package org.foi.nwtis.dhorvat3.web.kontrole;
 
 /**
- *
+ * Klasa za prikaz izbornika
  * @author Davorin Horvat
  */
 public class Izbornik {

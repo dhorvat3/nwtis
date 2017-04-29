@@ -5,7 +5,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <f:view locale="#{lokalizacija.odabraniJezik}">
         <h:head>
-            <title>Facelet Title</title>
+            <title>#{m.pregledPoruka_naslov}</title>
             <script
                 src="https://code.jquery.com/jquery-3.2.1.min.js"
                 integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -25,44 +25,45 @@
                     <h:selectOneMenu class="form-control" value="#{pregledPoruka.odabranaMapa}" >
                         <f:selectItems value="#{pregledPoruka.mape}" var="f" itemLabel="#{f.labela}" itemValue="#{f.vrijednost}" />
                     </h:selectOneMenu>
-                    <h:commandButton class="btn btn-default" value="Promjeni" action="#{pregledPoruka.promjenaMape()}"/>
+                    <h:commandButton class="btn btn-default" value="#{m.pregledPoruka_odaberiMapu}" action="#{pregledPoruka.promjenaMape()}"/>
                     <br />
                     <h:outputLabel value="Traži: " />
                     <h:inputText class="form-control" value="#{pregledPoruka.traziPoruke}" />
-                    <h:commandButton class="btn btn-default" value="Traži" action="#{pregledPoruka.traziPoruke()}" />
+                    <h:commandButton class="btn btn-default" value="#{m.pregledPoruka_trazi}" action="#{pregledPoruka.traziPoruke()}" />
                 </div>
 
                 <h:dataTable class="table table-bordered" value="#{pregledPoruka.poruke}" var="p">
                     <h:column>
                         <f:facet name="header">ID</f:facet>
-                        <h:outputText value="#{p.id}"/>
+                        <h:outputText value="#{p.id + pregledPoruka.pozicijaOdPoruka}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Predmet</f:facet>
+                        <f:facet name="header">#{m.slanjePoruke_predmet}</f:facet>
                         <h:outputText value="#{p.predmet}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Šalje</f:facet>
+                        <f:facet name="header">#{m.slanjePoruke_salje}</f:facet>
                         <h:outputText value="#{p.salje}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Vrijeme slanje</f:facet>
+                        <f:facet name="header">#{m.slanjePoruke_vrijeme}</f:facet>
                         <h:outputText value="#{p.vrijemeSlanja}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Sadržaj</f:facet>
+                        <f:facet name="header">#{m.slanjePoruke_sadrzaj}</f:facet>
                         <h:outputText value="#{p.sadrzaj}" />
                     </h:column>
                 </h:dataTable>
                 <br />
                 <div class="row">
                     <div class="col-sm-2 col-xs-6">
-                        <h:outputText class="sum-text" value="Ukupno poruka: "/>
+                        <h:outputText class="sum-text" value="#{m.pregledProuka_unupno}"/>
                         <h:outputText class="sum-text" value="#{pregledPoruka.ukupnoPorukaMapa}" />
                     </div>
                     <div class="col-sm-4 col-sm-offset-6 col-xs-6">
-                        <h:commandButton class="btn btn-info pull-right" value="Prethodne" action="#{pregledPoruka.prethodnePoruke()}" />
-                        <h:commandButton class="btn btn-info pull-right" value="Slijedeće" action="#{pregledPoruka.sljedecePoruke()}" />
+                        
+                        <h:commandButton class="btn btn-info pull-right" value="#{m.pregledProuka_gumbSlijedecePoruke}" action="#{pregledPoruka.sljedecePoruke()}" />
+                        <h:commandButton class="btn btn-info pull-right" value="#{m.pregledPoruka_gumbPretheodnePoruke}" action="#{pregledPoruka.prethodnePoruke()}" />
                     </div>
                 </div>
             </h:form>

@@ -15,7 +15,7 @@ import javax.faces.context.FacesContext;
 import org.foi.nwtis.dhorvat3.web.kontrole.Izbornik;
 
 /**
- *
+ * Klasa za upravljanje lokalizacijskim parametrima.
  * @author Davorin Horvat
  */
 @Named(value = "lokalizacija")
@@ -35,6 +35,7 @@ public class Lokalizacija implements Serializable {
      * Creates a new instance of Lokalizacija
      */
     public Lokalizacija() {
+        odabraniJezik = "hr";
     }
 
     public ArrayList<Izbornik> getIzbornikJezika() {

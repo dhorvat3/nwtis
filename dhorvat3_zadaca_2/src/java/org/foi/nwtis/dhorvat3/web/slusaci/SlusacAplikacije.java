@@ -21,7 +21,7 @@ import org.foi.nwtis.dhorvat3.web.dretve.ObradaPoruka;
 
 /**
  * Web application lifecycle listener.
- *
+ * Slušač aplikacije starta pozadinsku dretvu koja provjerava na poslužitelju
  * @author Davorin Horvat
  */
 @WebListener

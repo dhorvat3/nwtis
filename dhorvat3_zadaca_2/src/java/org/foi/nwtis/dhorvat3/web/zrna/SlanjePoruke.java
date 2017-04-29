@@ -24,18 +24,26 @@ import javax.servlet.ServletContext;
 import org.foi.nwtis.dhorvat3.konfiguracije.Konfiguracija;
 
 /**
+ * Kod odabira slanja email poruka slijedi prikaz tablice unutar koje je obrazac
+ * za unos podataka poruke (primatelj, pošiljatelj, predmet, sadržaj poruke). U
+ * podnožju tablice nalazi se gumb za slanje email poruke. U zaglavlju pogleda
+ * treba biti poveznica na izbor jezika i poveznica na pregled primljenih email
+ * poruka.
  *
  * @author Davorin Horvat
  */
 @Named(value = "slanjePoruke")
 @RequestScoped
 public class SlanjePoruke {
+
     private String posluzitelj;
     private String salje;
     private String prima;
     private String predmet;
     private String sadrzaj;
+
     /**
+     * Dohvaća podatke o mail serveru.
      * Creates a new instance of SlanjePoruke
      */
     public SlanjePoruke() {
@@ -83,46 +91,50 @@ public class SlanjePoruke {
     public void setSadrzaj(String sadrzaj) {
         this.sadrzaj = sadrzaj;
     }
-    
-    public String saljiPoruku(){        
-        try{
+
+    /**
+     * Šalje unesenu poruku na zadanu adresu.
+     * @return 
+     */
+    public String saljiPoruku() {
+        try {
             Properties properties = System.getProperties();
             properties.put("mail.mstp.host", this.posluzitelj);
-            
+
             Session session = Session.getInstance(properties, null);
-            
+
             MimeMessage message = new MimeMessage(session);
-            
+
             Address fromAddress = new InternetAddress(this.salje);
             message.setFrom(fromAddress);
-            
+
             Address toAddress = new InternetAddress(this.prima);
             message.setRecipient(Message.RecipientType.TO, toAddress);
-            
+
             message.setSubject(this.predmet);
             message.setText(this.sadrzaj);
             message.setSentDate(new Date());
-            
+
             Transport.send(message);
-            
+
         } catch (AddressException ex) {
             Logger.getLogger(SlanjePoruke.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MessagingException ex) {
             Logger.getLogger(SlanjePoruke.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         this.sadrzaj = "";
         this.predmet = "";
         this.prima = "";
         this.salje = "";
         return "PoslanaPoruka";
     }
-    
-    public String promjenaJezika(){
+
+    public String promjenaJezika() {
         return "PromjenaJezika";
     }
-    
-    public String pregledPoruka(){
+
+    public String pregledPoruka() {
         return "PregledPoruka";
     }
 }

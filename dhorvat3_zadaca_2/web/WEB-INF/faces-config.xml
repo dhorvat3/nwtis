@@ -122,5 +122,38 @@
                 /pregledPoruka.xhtml
             </to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-action>
+                #{pregledPoruka.sljedecePoruke()}
+            </from-action>
+            <from-outcome>
+                SljedecePoruke
+            </from-outcome>
+            <to-view-id>
+                /pregledPoruka.xhtml
+            </to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>
+                #{pregledPoruka.prethodnePoruke()}
+            </from-action>
+            <from-outcome>
+                PrethodnePoruke
+            </from-outcome>
+            <to-view-id>
+                /pregledPoruka.xhtml
+            </to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>
+                #{pregledPoruka.traziPoruke()}
+            </from-action>
+            <from-outcome>
+                FiltirajPoruke
+            </from-outcome>
+            <to-view-id>
+                /pregledPoruka.xhtml
+            </to-view-id>
+        </navigation-case>
     </navigation-rule>
 </faces-config>

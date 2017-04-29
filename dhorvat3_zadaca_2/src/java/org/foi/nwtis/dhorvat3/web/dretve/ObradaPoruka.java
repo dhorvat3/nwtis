@@ -35,6 +35,17 @@ import org.foi.nwtis.dhorvat3.konfiguracije.Konfiguracija;
 import org.foi.nwtis.dhorvat3.konfiguracije.bp.BP_Konfiguracija;
 
 /**
+ * Slušač aplikacije starta pozadinsku dretvu koja provjerava na poslužitelju
+ * (adresa i IMAP port određena konfiguracijom) u pravilnom intervalu (određen
+ * konfiguracijom u sek) ima li poruka u poštanskom sandučiću korisnika (adresa
+ * i lozinka određeni konfiguracijom, npr. servis@nwtis.nastava.foi.hr, 123456).
+ * Koristi se IMAP protokol. Poruke koje u predmetu (subject) imaju točno
+ * traženi sadržaj (određen konfiguracijom, npr. NWTiS poruka) obrađuju se tako
+ * da se ispituje sadržaj poruke. Dretva na kraju svakog ciklusa šalje email
+ * poruku u text/plain formatu na adresu (određena konfiguracijom, npr.
+ * admin@nwtis.nastava.foi.hr), uz predmet koji započinje statičkim dijelom
+ * (određen konfiguracijom, npr. Statistika poruka) iza kojeg dolazi redni broj
+ * poruke u formatu #.##0,
  *
  * @author Davorin Horvat
  */
@@ -52,10 +63,25 @@ public class ObradaPoruka extends Thread {
         super.interrupt(); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Za poruku koja ima ispravnu sintaksu slijedi provođenja postupka: ako se
+     * radi o komandi ADD tada treba dodati zapis u tablicu UREDAJI u bazi
+     * podataka, s time da ako već postoji, onda je pogreška. Ako se radi o
+     * komandi TEMP tada se provjerava zapis u tablici UREDAJI za zadani broj
+     * IoT i ako postoji, dodaje se zapis u tablicu TEMPERATURE. Ako ne postoji,
+     * onda je pogreška. Ako se radi o komandi EVENT tada se provjerava zapis u
+     * tablici UREDAJI za zadani broj IoT i ako postoji, dodaje se zapis u
+     * tablicu DOGADAJI. Ako ne postoji, onda je pogreška.
+     *
+     * Obrađene poruke (određen konfiguracijom, npr. NWTiS poruka) prebacuju se
+     * u posebnu mapu (određena konfiguracijom, npr. NWTiS_Poruke). Ostale
+     * poruke prebacuju se u svoju mapu (određena konfiguracijom, npr.
+     * NWTiS_OstalePoruke). Ako neka mapa ne postoji, dretva ju treba sama
+     * kreirati.
+     */
     @Override
     public void run() {
         Date pocetakObrade = new Date();
-        //DOhvati konfiguraciju baze
         BP_Konfiguracija bp_konfig = (BP_Konfiguracija) servletContext.getAttribute("BP_Konfig");
         String url = bp_konfig.getServerDatabase() + bp_konfig.getUserDatabase();
         String user = bp_konfig.getUserUsername();
@@ -71,7 +97,6 @@ public class ObradaPoruka extends Thread {
             Logger.getLogger(ObradaPoruka.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        //Dohvati mail konfiguracije
         Konfiguracija konfig = (Konfiguracija) servletContext.getAttribute("Mail_Konfig");
         String server = konfig.dajPostavku("mail.server");
         String port = konfig.dajPostavku("mail.port");
@@ -81,9 +106,7 @@ public class ObradaPoruka extends Thread {
         String naslov = konfig.dajPostavku("mail.subject");
         String otherFolder = konfig.dajPostavku("mail.folderOther");
         String nwtisFolder = konfig.dajPostavku("mail.folderNWTiS");
-        //TODO I za ostale parametre
         float trajanjeObrade = 0;
-        //TODO odrediti trajanje obrade
         int redniBrojCiklusa = 0;
 
         String regexAdd = "ADD IoT (\\d{1,6}) \"([a-zA-Z žćčđš]+)\"GPS: (\\d+\\.\\d+),(\\d+\\.\\d+);";
@@ -148,12 +171,6 @@ public class ObradaPoruka extends Thread {
                         Matcher mTemp = pTemp.matcher(content);
                         Matcher mEvent = pEvent.matcher(content);
                         if (mAdd.find()) {
-                            /*System.out.println("-----------------------");
-                            System.out.println("ID: " + mAdd.group(1));
-                            System.out.println("Naziv: " + mAdd.group(2));
-                            System.out.println("Longitude: " + mAdd.group(3));
-                            System.out.println("Lattitude: " + mAdd.group(4));
-                            System.out.println("-----------------------");*/
                             if (postojiUredjaj(mAdd.group(1)) != 0) {
                                 System.out.println("--- UREĐAJ --- Postoji uređaj! ID: " + mAdd.group(1));
                                 brojGresaka += 1;
@@ -167,12 +184,6 @@ public class ObradaPoruka extends Thread {
                             }
                             processedMessages.add(messages[i]);
                         } else if (mTemp.find()) {
-                            /*System.out.println("-----------------------");
-                            System.out.println("ID: " + mTemp.group(1));
-                            System.out.println("Datum: " + mTemp.group(2));
-                            System.out.println("Vrijeme: " + mTemp.group(3));
-                            System.out.println("Temperatura: " + mTemp.group(4));
-                            System.out.println("-----------------------");*/
                             if (postojiUredjaj(mTemp.group(1)) != 0) {
                                 String query = "INSERT INTO temperature (id, temp, vrijeme_mjerenja, vrijeme_kreiranja) VALUES (" + mTemp.group(1) + ", " + mTemp.group(4) + ", '" + mTemp.group(2) + " " + mTemp.group(3) + "', NOW())";
                                 System.out.println("SQL: " + query);
@@ -185,13 +196,6 @@ public class ObradaPoruka extends Thread {
                             }
                             processedMessages.add(messages[i]);
                         } else if (mEvent.find()) {
-                            /*System.out.println("-----------------------");
-                            System.out.println("ID: " + mEvent.group(1));
-                            System.out.println("Datum: " + mEvent.group(2));
-                            System.out.println("Vrijeme: " + mEvent.group(3));
-                            System.out.println("F: " + mEvent.group(4));
-                            System.out.println("-----------------------");*/
-
                             if (postojiUredjaj(mEvent.group(1)) != 0) {
                                 if (postojiVrsta(mEvent.group(4))) {
                                     String query = "INSERT INTO dogadaji (id, vrsta, vrijeme_izvrsavanja, vrijeme_kreiranja) VALUES (" + mEvent.group(1) + ", " + mEvent.group(4) + ", '" + mEvent.group(2) + " " + mEvent.group(3) + "', NOW())";
@@ -203,7 +207,6 @@ public class ObradaPoruka extends Thread {
                                     System.out.println("--- EVENT --- Vrsta ne postoji. ID: " + mEvent.group(4));
                                     brojGresaka += 1;
                                 }
-
                             } else {
                                 System.out.println("--- EVENT --- Ne postoji uređaj! ID: " + mEvent.group(1));
                                 brojGresaka += 1;
@@ -235,16 +238,16 @@ public class ObradaPoruka extends Thread {
                 otherF.close(false);
                 trashFolder.close(false);
                 store.close();
-                
+
                 Date krajObrade = new Date();
                 trajanjeObrade = krajObrade.getTime() - (pocetakObrade.getTime() - 1);
 
                 posaljiStatistiku(redniBrojCiklusa, pocetakObrade, krajObrade, (int) trajanjeObrade, brojPoruka, brojAdd, brojTemp, brojEvent, brojGresaka);
-                
-                if(trajanjeObrade < 0){
+
+                if (trajanjeObrade < 0) {
                     trajanjeObrade = 0;
                 }
-                
+
                 sleep(trajanjeCiklusa * 1000);
             } catch (InterruptedException | MessagingException | IOException | SQLException ex) {
                 Logger.getLogger(ObradaPoruka.class.getName()).log(Level.SEVERE, null, ex);
@@ -261,6 +264,13 @@ public class ObradaPoruka extends Thread {
         this.servletContext = servletContext;
     }
 
+    /**
+     * Provjerava postoji li uređaj za zadani ID
+     *
+     * @param id id koji treba provjeriti
+     * @return ID pronađenog uređaja
+     * @throws SQLException
+     */
     private int postojiUredjaj(String id) throws SQLException {
         ResultSet rs;
 
@@ -275,21 +285,41 @@ public class ObradaPoruka extends Thread {
         return index;
     }
 
+    /**
+     * Provjerava postoji li vrsta događaja u bazi podataka
+     *
+     * @param id
+     * @return
+     * @throws SQLException
+     */
     private boolean postojiVrsta(String id) throws SQLException {
         ResultSet rs;
         String query = "SELECT * FROM dogadaji_vrste WHERE vrsta = " + id;
         rs = this.statement.executeQuery(query);
         return rs.next();
     }
-    
-    private void posaljiStatistiku(int redniBroj, Date pocetak, Date kraj, int trajanje, int brojPoruka, int brojAdd, int brojTemp, int brojEvent, int brojGresaka){
+
+    /**
+     * Šalje mail s informacijama o obradi.
+     *
+     * @param redniBroj
+     * @param pocetak
+     * @param kraj
+     * @param trajanje
+     * @param brojPoruka
+     * @param brojAdd
+     * @param brojTemp
+     * @param brojEvent
+     * @param brojGresaka
+     */
+    private void posaljiStatistiku(int redniBroj, Date pocetak, Date kraj, int trajanje, int brojPoruka, int brojAdd, int brojTemp, int brojEvent, int brojGresaka) {
         //Build forma #.##0
         String rb = "";
-        if(redniBroj / 1000 > 0){
+        if (redniBroj / 1000 > 0) {
             rb = String.valueOf(redniBroj / 1000) + "." + String.valueOf(redniBroj % 1000);
-        } else if (redniBroj / 100 > 0){
+        } else if (redniBroj / 100 > 0) {
             rb = " " + String.valueOf(redniBroj);
-        } else if (redniBroj / 10 > 0){
+        } else if (redniBroj / 10 > 0) {
             rb = "  " + String.valueOf(redniBroj);
         } else {
             rb = "   " + String.valueOf(redniBroj);
@@ -301,7 +331,7 @@ public class ObradaPoruka extends Thread {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy hh.mm.ss.zzz");
         String pocetakObrade = dateFormat.format(pocetak);
         String krajObrade = dateFormat.format(kraj);
-        
+
         String text = "Obrada započela u: " + pocetakObrade;
         text += "\r\nObrada završila u: " + krajObrade;
         text += "\r\n\r\nTrajanje obrade u ms: " + trajanje;
@@ -310,7 +340,7 @@ public class ObradaPoruka extends Thread {
         text += "\r\nBroj mjerenih: " + brojTemp;
         text += "\r\nBroj izvršenih EVENT: " + brojEvent;
         text += "\r\nBroj pogrešaka: " + brojGresaka;
-        
+
         String server = konfig.dajPostavku("mail.server");
         String port = konfig.dajPostavku("mail.port");
         String from = konfig.dajPostavku("mail.usernameThread");
@@ -320,16 +350,16 @@ public class ObradaPoruka extends Thread {
             properties.put("mail.smtp.host", server);
             properties.put("mail.smtp.port", port);
             Session session = Session.getInstance(properties, null);
-            
+
             InternetAddress fromAddress = new InternetAddress(from);
             InternetAddress toAddress = new InternetAddress(to);
-            
+
             Message message = new MimeMessage(session);
             message.setFrom(fromAddress);
             message.setRecipient(Message.RecipientType.TO, toAddress);
             message.setSubject(naslov);
             message.setText(text);
-            
+
             Transport.send(message);
         } catch (AddressException ex) {
             Logger.getLogger(ObradaPoruka.class.getName()).log(Level.SEVERE, null, ex);

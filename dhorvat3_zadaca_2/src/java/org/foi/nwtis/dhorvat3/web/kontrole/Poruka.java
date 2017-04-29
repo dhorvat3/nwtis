@@ -8,7 +8,7 @@ package org.foi.nwtis.dhorvat3.web.kontrole;
 import java.util.Date;
 
 /**
- *
+ * Klasa za spremanje poruka.
  * @author Davorin Horvat
  */
 public class Poruka {
