@@ -2,16 +2,88 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
     <h:head>
+        <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
         <title>Odabir uređaja</title>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     </h:head>
-    <h:body>
-        Odabir uređaja
-        <h:form>
-            <h:selectManyListbox value="#{odabirUredjaja.id}" size="5">
-                <f:selectItems value="#{odabirUredjaja.uredaji}" var="uredaj" itemLabel="#{uredaj.naziv}#{uredaj.geoloc.latitude}" itemValue="#{uredaj.id}"></f:selectItems>
-            </h:selectManyListbox>
+    <h:body class="container">
+        <h:form class="row">
+            <div class="form-group row">
+                <label for="" class="col-xs-2 col-form-label">Naziv i adresa: </label>
+                <div class="col-xs-4">
+                    <h:inputText class="form-control" value="#{odabirUredjaja.noviUredjaj.naziv}" />
+                </div>
+                <div class="col-xs-4 col-xs-offset-1">
+                    <h:inputText class="form-control" value="#{odabirUredjaja.adresa}"/>
+                </div>
+                <div class="col-xs-1">
+                    <h:commandButton class="btn btn-primary" value="Upiši SOAP" action="#{odabirUredjaja.dodajUredjaj()}"/>
+                    <h:commandButton class="btn btn-primary" value="Upiši REST" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-xs-2 col-form-label">Uređaji:</label>
+                <div class="col-xs-3">
+                    <h:selectManyListbox value="#{odabirUredjaja.id}" size="15">
+                        <f:selectItems value="#{odabirUredjaja.uredaji}" var="uredaj" itemLabel="#{uredaj.naziv}" itemValue="#{uredaj.id}"></f:selectItems>
+                    </h:selectManyListbox>
+                </div>
+                <div class="col-xs-7 row ">
+                    <label class="col-xs-2 col-form-label">Od-do:</label>
+                    <div class="col-xs-10 row od-do">
+                        <div class="col-xs-6">
+                            <h:inputText class="form-control" p:placeholder="dd.mm.YYYY. H:s" value="#{odabirUredjaja.from}" />
+                        </div>
+                        <div class="col-xs-6">
+                            <h:inputText class="form-control" p:placeholder="dd.mm.YYYY. H:s" value="#{odabirUredjaja.to}"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 col-xs-offset-10">
+                        <h:commandButton class="btn btn-primary" value="Preuzmi SOAP" action="#{odabirUredjaja.dohvatiMeteopodatke()}" />
+                        <h:commandButton class="btn btn-primary" value="Preuzmi REST" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 row">
+                <h:dataTable class="col-xs-12 table table-condensed" value="#{odabirUredjaja.meteoPodaci}" var="meteo">
+                    <h:column>
+                        <f:facet name="header">Temperatura</f:facet>
+                        #{meteo.temperatureValue} #{meteo.temperatureUnit}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Valga</f:facet>
+                        #{meteo.humidityValue} #{meteo.humidityUnit}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Tlak</f:facet>
+                        #{meteo.pressureValue} #{meteo.precipitationUnit}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Najniža temperatura</f:facet>
+                        #{meteo.temperatureMin} #{meteo.temperatureUnit}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Najviša temperatura</f:facet>
+                        #{meteo.temperatureMax} #{meteo.temperatureUnit}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Vrijeme</f:facet>
+                        #{meteo.weatherValue}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Datum preuzimanja</f:facet>
+                        #{meteo.lastUpdate.day}.#{meteo.lastUpdate.month}.#{meteo.lastUpdate.year}
+                    </h:column>
+                </h:dataTable>
+            </div>
         </h:form>
     </h:body>
 </html>

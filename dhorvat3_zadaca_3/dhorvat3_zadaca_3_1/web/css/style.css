@@ -1,0 +1,53 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : May 8, 2017, 6:04:05 PM
+    Author     : Davorin Horvat
+*/
+
+.btn-primary {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+label {
+    min-width: 100%;
+}
+
+.labels > label {
+    margin-bottom: 20px;
+}
+
+.inputs > input {
+    margin-bottom: 5px;
+}
+
+#naziv {
+    width: 35%;
+    margin-right: 10%;
+    display: inline-block;
+}
+
+#adresa {
+    display: inline-block;
+    width: 34.5%;
+}
+
+#geoLokacija {
+    width: 80%;
+}
+
+.output {
+    display: inline-block;
+}
+
+.weather > label {
+    min-width: 10% !important;
+}
+
+.error {
+    color: red;
+}

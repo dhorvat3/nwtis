@@ -15,6 +15,7 @@ import org.foi.nwtis.dhorvat3.konfiguracije.Konfiguracija;
 import org.foi.nwtis.dhorvat3.konfiguracije.KonfiguracijaApstraktna;
 import org.foi.nwtis.dhorvat3.konfiguracije.NeispravnaKonfiguracija;
 import org.foi.nwtis.dhorvat3.konfiguracije.NemaKonfiguracije;
+import org.foi.nwtis.dhorvat3.web.PozadinskaDretva;
 
 /**
  * Web application lifecycle listener.
@@ -23,7 +24,8 @@ import org.foi.nwtis.dhorvat3.konfiguracije.NemaKonfiguracije;
  */
 public class SlusacAplikacije implements ServletContextListener {
     
-    private ServletContext context = null;
+    private PozadinskaDretva pozadinskaDretva = null;
+    private static ServletContext context = null;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -31,24 +33,27 @@ public class SlusacAplikacije implements ServletContextListener {
         
         String datoteka = context.getRealPath("/WEB-INF") + File.separator + context.getInitParameter("konfiguracija");
         context.setAttribute("BP_Konfig", datoteka);
-        System.out.println("Učitana konfiguracija");;
+        System.out.println("Učitana konfiguracija");
         
         Konfiguracija konfig = null;
         
         try{
             konfig = KonfiguracijaApstraktna.preuzmiKonfiguraciju(datoteka);
-            context.setAttribute("Mail_Konfig", konfig);
+            context.setAttribute("Server_Konfig", konfig);
         } catch (NemaKonfiguracije | NeispravnaKonfiguracija ex) {
             Logger.getLogger(SlusacAplikacije.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        pozadinskaDretva = new PozadinskaDretva(context);
+        pozadinskaDretva.start();
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
-    public ServletContext getContext() {
+    public static ServletContext getContext() {
         return context;
     }
     

@@ -15,6 +15,7 @@
 <xs:complexType name="dodajUredjaj">
 <xs:sequence>
 <xs:element name="uredjaj" type="tns:uredjaj" minOccurs="0"/>
+<xs:element name="adresa" type="xs:string" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 
