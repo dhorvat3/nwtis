@@ -13,8 +13,14 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import org.foi.nwtis.dhorvat3.ejb.eb.Dnevnik;
+import org.foi.nwtis.dhorvat3.ejb.eb.Promjene;
 import org.foi.nwtis.dhorvat3.ejb.eb.Uredaji;
+import org.foi.nwtis.dhorvat3.ejb.sb.DnevnikFacade;
 import org.foi.nwtis.dhorvat3.ejb.sb.MeteoIoTKlijent;
+import org.foi.nwtis.dhorvat3.ejb.sb.PromjeneFacade;
 import org.foi.nwtis.dhorvat3.ejb.sb.UredajiFacade;
 import org.foi.nwtis.dhorvat3.web.kontrole.Izbornik;
 import org.foi.nwtis.dhorvat3.web.podaci.Lokacija;
@@ -30,10 +36,19 @@ import org.foi.nwtis.dhorvat3.web.podaci.Uredjaj;
 public class OdabirIoTPrognoza implements Serializable {
 
     @EJB
+    private PromjeneFacade promjeneFacade;
+
+    @EJB
+    private DnevnikFacade dnevnikFacade;
+
+    @EJB
     private MeteoIoTKlijent meteoIoTKlijent;
 
     @EJB
     private UredajiFacade uredajiFacade;
+    
+    
+    
 
     private String noviId;
     private String noviNaziv;
@@ -179,6 +194,7 @@ public class OdabirIoTPrognoza implements Serializable {
     }
 
     private void preuzmiRaspoloziveIoTUredaje(){
+        Date vrijemePocetak = new Date();
         List<Uredaji> uredaji = uredajiFacade.findAll();
         raspoloziviIoT.clear();
         azuriranje = odabraniIoT.size() == 1;
@@ -193,20 +209,29 @@ public class OdabirIoTPrognoza implements Serializable {
             if(!postoji)
                 raspoloziviIoT.add(new Izbornik(uredaj.getNaziv(), uredaj.getId().toString()));
         }
+        Date vrijemeKraj = new Date();
+        int razlika = (int) (vrijemeKraj.getTime() - vrijemePocetak.getTime())/1000;
+        
+        zapisiDnevnik(razlika, vrijemePocetak, 1);
+        
     }
     
     public String dodajIoTUredaj(){
-        
+        Date vrijemePocetak = new Date();
         Lokacija l = meteoIoTKlijent.dajLokaciju(noviAdresa);
         float lat = Float.parseFloat(l.getLatitude());
         float lng = Float.parseFloat(l.getLongitude());
         Uredaji uredaji = new Uredaji(Integer.parseInt(noviId), noviNaziv, lat, lng, 0, new Date(), new Date());
         uredajiFacade.create(uredaji);
+        Date vrijemeKraj = new Date();
+        int razlika = (int) (vrijemeKraj.getTime() - vrijemePocetak.getTime())/1000;
         
+        zapisiDnevnik(razlika, vrijemePocetak, 2);
         return "";
     }
     
     public String preuzmiIoTUredjaj(){
+        Date vrijemePocetak = new Date();
         prognoze = true;
         for(Iterator<Izbornik> iterator = raspoloziviIoT.iterator(); iterator.hasNext();){
             Izbornik element = iterator.next();
@@ -216,11 +241,15 @@ public class OdabirIoTPrognoza implements Serializable {
                 iterator.remove();
             }
         }
+        Date vrijemeKraj = new Date();
+        int razlika = (int) (vrijemeKraj.getTime() - vrijemePocetak.getTime())/1000;
         
+        zapisiDnevnik(razlika, vrijemePocetak, 3);
         return "";
     }
     
     public String azurirajIoTUredjaj(){
+        Date vrijemePocetak = new Date();
         Uredaji uredaj = uredajiFacade.find(Integer.parseInt(azurirajId));
         if(uredaj.getNaziv() == null ? azurirajNaziv != null : !uredaj.getNaziv().equals(azurirajNaziv)){
             uredaj.setNaziv(azurirajNaziv);
@@ -236,11 +265,27 @@ public class OdabirIoTPrognoza implements Serializable {
         }
         odabraniIoT.get(0).setLabela(uredaj.getNaziv());
         uredajiFacade.edit(uredaj);
+        Date vrijemeKraj = new Date();
+        int razlika = (int) (vrijemeKraj.getTime() - vrijemePocetak.getTime())/1000;
         
+        Promjene promjene = new Promjene();
+        
+        promjene.setId(uredaj.getId());
+        promjene.setNaziv(uredaj.getNaziv());
+        promjene.setLatitude(uredaj.getLatitude());
+        promjene.setLongitude(uredaj.getLongitude());
+        promjene.setStatus(uredaj.getStatus());
+        promjene.setVrijemePromjene(new Date());
+        promjene.setVrijemeKreiranja(uredaj.getVrijemeKreiranja());
+        
+        promjeneFacade.create(promjene);
+        
+        zapisiDnevnik(razlika, vrijemePocetak, 4);
         return "";
     }
     
     public String prikaziUredaj(){
+        Date vrijemePocetak = new Date();
         String id = odabraniIoT.get(0).getVrijednost();
         System.out.println("--- ID: " + id);
         List<Uredaji> uredaji = uredajiFacade.findAll();
@@ -251,7 +296,10 @@ public class OdabirIoTPrognoza implements Serializable {
                 azurirajAdresa = meteoIoTKlijent.dajAdresu(uredaj.getLatitude(), uredaj.getLongitude());
             }
         }
+        Date vrijemeKraj = new Date();
+        int razlika = (int) (vrijemeKraj.getTime() - vrijemePocetak.getTime())/1000;
         
+        zapisiDnevnik(razlika, vrijemePocetak, 5);
         return "";
     }
     
@@ -273,6 +321,7 @@ public class OdabirIoTPrognoza implements Serializable {
     }
     
     public String prikaziPrognozu(){
+        Date vrijemePocetak = new Date();
         prikazPrognoze = true;
         meteoPrognoze.clear();
         List<Uredaji> uredaji = uredajiFacade.findAll();
@@ -287,6 +336,39 @@ public class OdabirIoTPrognoza implements Serializable {
             }
         }
         gumbPregledPrognoza = "Ažuriraj prognoze";
+        Date vrijemeKraj = new Date();
+        int razlika = (int) (vrijemeKraj.getTime() - vrijemePocetak.getTime())/1000;
+        
+        zapisiDnevnik(razlika, vrijemePocetak, 6);
         return "";
+    }
+    
+    /**
+     * Statusi:
+     * 1 - Preuzmi raspoložive IoT uređaje
+     * 2 - Dodaj IoT uređaj
+     * 3 - Preuzmi IoT Uređaj
+     * 4 - Ažuriraj IoT uređaj
+     * 5 - Prikaži prognozu
+     * @param razlika
+     * @param vrijemePocetak
+     * @param status 
+     */
+    private void zapisiDnevnik(int razlika, Date vrijemePocetak, int status){
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String ip = request.getHeader("X-FORWARDED-FOR");
+        if(ip == null){
+            ip = request.getRemoteAddr();
+        }
+        String url = request.getRequestURI();
+        
+        Dnevnik dnevnik = new Dnevnik();
+        dnevnik.setTrajanje(razlika);
+        dnevnik.setIpadresa(ip);
+        dnevnik.setVrijeme(vrijemePocetak);
+        dnevnik.setUrl(url);
+        dnevnik.setKorisnik("aa");
+        dnevnik.setStatus(status);
+        dnevnikFacade.create(dnevnik);
     }
 }

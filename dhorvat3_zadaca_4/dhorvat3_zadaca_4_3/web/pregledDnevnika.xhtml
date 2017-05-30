@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
 
@@ -24,6 +25,58 @@
 
             <ui:define name="content">
                 Pregled dnevnika
+                <h:form>
+                    <h:panelGrid columns="4">
+                        <h:outputText value="Filtriranje:" />
+                        <h:outputText value="" />
+                        <h:outputText value="" />
+                        <h:outputText value="" />
+                        <h:outputLabel value="Od:" for="vrijemeOd" />
+                        <h:inputText value="#{pregledDnevnika.vrijemeOd}" validatorMessage="Neispravan format početnog datuma! yyyy-dd-MM [HH:mm:ss]" id="vrijemeOd">
+                            <f:validateRegex pattern="([0-3][0-9]-[0-1][0-9]-\d{4}( [0-2][0-9]:[0-6][0-9]:[0-6][0-9])?)?"/>
+                        </h:inputText>
+                        <h:outputLabel value="Do:" for="vrijemeDo" />
+                        <h:inputText value="#{pregledDnevnika.vrijemeDo}" validatorMessage="Neispravan format krajnjeg datuma! dd-MM-yyyy [HH:mm:ss]" id="vrijemeDo">
+                            <f:validateRegex pattern="([0-3][0-9]-[0-1][0-9]-\d{4}( [0-2][0-9]:[0-6][0-9]:[0-6][0-9])?)?"/>
+                        </h:inputText>
+                        <h:outputLabel value="IP adresa:" for="ipAdresa" />
+                        <h:inputText value="#{pregledDnevnika.ipAdresa}" id="ipAdresa"/>
+                        <h:outputLabel value="Status" for="status" />
+                        <h:selectOneListbox value="#{pregledDnevnika.status}" id="status" >
+                            <f:selectItems value="#{pregledDnevnika.statusi}" var="o" itemLabel="#{o.labela}" itemValue="#{o.vrijednost}" />
+                        </h:selectOneListbox>
+                        <h:commandButton value="Traži!" action="#{pregledDnevnika.pretrazi()}" >
+                            <f:ajax execute="vrijemeOd vrijemeDo ipAdresa status" render="rezultati" />
+                        </h:commandButton>
+                    </h:panelGrid>
+                    <h:panelGrid columns="1">
+                        <h:outputText value="Rezultati pretraživanja: " />
+                        <h:dataTable value="#{pregledDnevnika.rezultati}" id="rezultati" var="r" >
+                            <h:column>
+                                <f:facet name="header">URL</f:facet>
+                                <h:outputText value="#{r.url}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">IP adresa</f:facet>
+                                <h:outputText value="#{r.ipadresa}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Status</f:facet>
+                                <h:outputText value="#{r.status}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Trajanje (s)</f:facet>
+                                <h:outputText value="#{r.trajanje}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Vrijeme</f:facet>
+                                <h:outputText value="#{r.vrijeme}" >
+                                    <f:convertDateTime type="date" pattern="dd-MM-yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </h:column>
+                        </h:dataTable>
+                    </h:panelGrid>
+                </h:form>
             </ui:define>
 
         </ui:composition>

@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <body>
 
@@ -24,6 +25,50 @@
 
             <ui:define name="content">
                 Pregled promjena
+                <h:form>
+                    <h:panelGrid columns="4">
+                        <h:outputText value="Filtriranje:" />
+                        <h:outputText value="" />
+                        <h:outputText value="" />
+                        <h:outputText value="" />
+                        <h:outputLabel value="ID: " for="promjeneId"/>
+                        <h:inputText value="#{pregledPromjena.id}" id="promjeneId" />
+                        <h:outputLabel value="Naziv: " for="promjeneNaziv" />
+                        <h:inputText value="#{pregledPromjena.naziv}" id="promjeneNaziv" />
+                        <h:commandButton value="Traži!" action="${pregledPromjena.pretrazi()}" >
+                            <f:ajax execute="promjeneId promjeneNaziv" render="rezultati" />
+                        </h:commandButton>
+                    </h:panelGrid>
+                    <h:panelGrid columns="1">
+                        <h:outputText value="Rezultati pretraživanja: " />
+                        <h:dataTable value="#{pregledPromjena.rezultati}" id="rezultati" var="r">
+                            <h:column>
+                                <f:facet name="header">ID</f:facet>
+                                <h:outputText value="#{r.id}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Širina</f:facet>
+                                <h:outputText value="#{r.latitude}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Dužina</f:facet>
+                                <h:outputText value="#{r.longitude}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Naziv</f:facet>
+                                <h:outputText value="#{r.naziv}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Vrijeme kreiranja</f:facet>
+                                <h:outputText value="#{r.vrijemeKreiranja}" />
+                            </h:column>
+                            <h:column>
+                                <f:facet name="header">Vrijeme promjene</f:facet>
+                                <h:outputText value="#{r.vrijemePromjene}" />
+                            </h:column>
+                        </h:dataTable>
+                    </h:panelGrid>
+                </h:form>
             </ui:define>
 
         </ui:composition>
