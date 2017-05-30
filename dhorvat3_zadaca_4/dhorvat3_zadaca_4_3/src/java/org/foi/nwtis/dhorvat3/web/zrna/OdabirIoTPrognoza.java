@@ -45,6 +45,7 @@ public class OdabirIoTPrognoza implements Serializable {
     private List<MeteoPrognoza> meteoPrognoze = new ArrayList<>();
     private boolean azuriranje = false;
     private boolean prognoze = false;
+    private boolean prikazPrognoze = false;
     private String azurirajId;
     private String azurirajNaziv;
     private String azurirajAdresa;
@@ -54,6 +55,14 @@ public class OdabirIoTPrognoza implements Serializable {
      * Creates a new instance of OdabirIoTPrognoza
      */
     public OdabirIoTPrognoza() {
+    }
+
+    public boolean isPrikazPrognoze() {
+        return prikazPrognoze;
+    }
+
+    public void setPrikazPrognoze(boolean prikazPrognoze) {
+        this.prikazPrognoze = prikazPrognoze;
     }
 
     public String getNoviId() {
@@ -172,6 +181,9 @@ public class OdabirIoTPrognoza implements Serializable {
     private void preuzmiRaspoloziveIoTUredaje(){
         List<Uredaji> uredaji = uredajiFacade.findAll();
         raspoloziviIoT.clear();
+        azuriranje = odabraniIoT.size() == 1;
+        System.out.println("-- BROJ: " + odabraniIoT.size());
+        System.out.println("--- AZURIRANJE: " + azuriranje);
         for (Uredaji uredaj : uredaji) {
             boolean postoji = false;
             for (Izbornik izbornik : odabraniIoT) {
@@ -184,6 +196,7 @@ public class OdabirIoTPrognoza implements Serializable {
     }
     
     public String dodajIoTUredaj(){
+        
         Lokacija l = meteoIoTKlijent.dajLokaciju(noviAdresa);
         float lat = Float.parseFloat(l.getLatitude());
         float lng = Float.parseFloat(l.getLongitude());
@@ -194,6 +207,7 @@ public class OdabirIoTPrognoza implements Serializable {
     }
     
     public String preuzmiIoTUredjaj(){
+        prognoze = true;
         for(Iterator<Izbornik> iterator = raspoloziviIoT.iterator(); iterator.hasNext();){
             Izbornik element = iterator.next();
             //System.out.println("OBRADA: " + element.getVrijednost());
@@ -220,14 +234,14 @@ public class OdabirIoTPrognoza implements Serializable {
                 uredaj.setLongitude(Float.parseFloat(l.getLongitude()));
             }
         }
-        
+        odabraniIoT.get(0).setLabela(uredaj.getNaziv());
         uredajiFacade.edit(uredaj);
         
         return "";
     }
     
     public String prikaziUredaj(){
-        String id = popisRaspoloziviIoT.get(0);
+        String id = odabraniIoT.get(0).getVrijednost();
         System.out.println("--- ID: " + id);
         List<Uredaji> uredaji = uredajiFacade.findAll();
         for (Uredaji uredaj : uredaji) {
@@ -242,6 +256,7 @@ public class OdabirIoTPrognoza implements Serializable {
     }
     
     public String vratiIoTUredjaj(){
+        azuriranje = odabraniIoT.size() == 1;
         for (Iterator<Izbornik> iterator = odabraniIoT.iterator(); iterator.hasNext();) {
             Izbornik next = iterator.next();
             if(popisOdabraniIoT.contains(next.getVrijednost())){
@@ -249,11 +264,16 @@ public class OdabirIoTPrognoza implements Serializable {
                 iterator.remove();
             }
         }
-        
+        prognoze = !odabraniIoT.isEmpty();
+        if(!prognoze){
+            gumbPregledPrognoza = "Pregled prognoza";
+            prikazPrognoze = false;
+        }
         return "";
     }
     
     public String prikaziPrognozu(){
+        prikazPrognoze = true;
         meteoPrognoze.clear();
         List<Uredaji> uredaji = uredajiFacade.findAll();
         for (Izbornik izbornik : odabraniIoT) {
@@ -266,7 +286,7 @@ public class OdabirIoTPrognoza implements Serializable {
                 }
             }
         }
-        
+        gumbPregledPrognoza = "Ažuriraj prognoze";
         return "";
     }
 }
