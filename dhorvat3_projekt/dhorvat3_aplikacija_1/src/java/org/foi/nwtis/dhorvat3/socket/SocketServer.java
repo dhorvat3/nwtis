@@ -5,16 +5,12 @@
  */
 package org.foi.nwtis.dhorvat3.socket;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.InputStream;
-import java.io.OutputStream;
 import javax.servlet.ServletContext;
+import org.foi.nwtis.dhorvat3.socket.dretve.MeteoDretva;
 import org.foi.nwtis.dhorvat3.socket.dretve.ObradaZahtjeva;
 
 /**
@@ -22,18 +18,22 @@ import org.foi.nwtis.dhorvat3.socket.dretve.ObradaZahtjeva;
  * @author Davorin Horvat
  */
 public class SocketServer extends Thread {
+
     private ServletContext context = null;
     private boolean kraj = true;
     private int port = 4258;
     private ServerSocket serverSocket = null;
+    private MeteoDretva meteoDretva = null;
 
-    public SocketServer(int port, ServletContext context) {
+    public SocketServer(int port, ServletContext context, MeteoDretva meteoDretva) {
         this.port = port;
         this.context = context;
+        this.meteoDretva = meteoDretva;
     }
 
-    public SocketServer(ServletContext context) {
+    public SocketServer(ServletContext context, MeteoDretva meteoDretva) {
         this.context = context;
+        this.meteoDretva = meteoDretva;
     }
 
     @Override
@@ -53,11 +53,12 @@ public class SocketServer extends Thread {
             pokreniServer();
             while (!kraj) {
                 System.out.println("--- SOCKET KORAK ---");
-                
-                ObradaZahtjeva obradaZahtjeva = new ObradaZahtjeva(serverSocket.accept(), context);
+
+                ObradaZahtjeva obradaZahtjeva = new ObradaZahtjeva(serverSocket.accept(), context, meteoDretva);
                 obradaZahtjeva.start();
-                
+
             }
+            serverSocket.close();
         } catch (IOException ex) {
             Logger.getLogger(SocketServer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -76,7 +77,7 @@ public class SocketServer extends Thread {
     public void zaustaviServer() throws IOException {
         kraj = true;
 
-        serverSocket.close();
+        
     }
 
 }

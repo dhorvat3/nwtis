@@ -13,6 +13,6 @@
 <entry key="driver.database.mysql">com.mysql.jdbc.Driver</entry>
 <entry key="driver.database.derby">org.apache.derby.jdbc.ClientDriver</entry>
 <entry key="driver.database.postgresql">org.postgresql.Driver</entry>
-<entry key="intervalDretveZaMeteoPodatke">60</entry>
-<entry key="apikey">2b8f87fd6603d85cb401193503defd6e</entry>
+<entry key="intervalDretveZaMeteoPodatke">3</entry>
+<entry key="apikey">c4da75e15a5cf5831514c92b85add116</entry>
 </properties>

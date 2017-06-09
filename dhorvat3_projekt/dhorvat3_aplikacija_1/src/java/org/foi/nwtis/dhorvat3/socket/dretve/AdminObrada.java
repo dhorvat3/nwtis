@@ -5,13 +5,9 @@
  */
 package org.foi.nwtis.dhorvat3.socket.dretve;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.servlet.ServletContext;
-import org.foi.nwtis.dhorvat3.konfiguracije.bp.BP_Konfiguracija;
 import org.foi.nwtis.dhorvat3.socket.helper.Helper;
 
 /**
@@ -19,21 +15,35 @@ import org.foi.nwtis.dhorvat3.socket.helper.Helper;
  * @author Davorin Horvat
  */
 public final class AdminObrada {
-    
-    public static int autentikacija(String userName, String pass, ServletContext context) throws ClassNotFoundException, SQLException{
-        ResultSet rs;
+
+    protected static String autentikacija(String userName, String pass, ServletContext context) throws ClassNotFoundException, SQLException {
         Statement statement = Helper.getStatement(context);
-        
-        String query = "SELECT * FROM korisnici WHERE korIme='" + userName + "' AND pass='" + pass + "'";
-        System.out.println("- ADMIN - autentikacija SQL: " + query);
-        rs = statement.executeQuery(query);
-        int index = 0;
-        while(rs.next()){
-            index = rs.getInt("id");
+        if (Helper.checkLogin(userName, pass, statement) < 1) {
+            return "ERR 10;";
         }
-        System.out.println("- ADMIN - autentikacija ID: " + index);
-        return index;
+
+        return "";
     }
-    
-    
+
+    protected static String pokreniServer(MeteoDretva meteoDretva) {
+        return (meteoDretva.resumeThread() == 1) ? "OK 10;" : "ERR 11;";
+    }
+
+    protected static String pauzirajServer(MeteoDretva meteoDretva) {
+        return (meteoDretva.pauseThread() == 1) ? "OK 10;" : "ERR 10;";
+    }
+
+    protected static String zaustaviServer(MeteoDretva meteoDretva) {
+        return (meteoDretva.stopThread() == 1) ? "OK 10;" : "ERR 12;";
+    }
+
+    protected static String uRadu(MeteoDretva meteoDretva) {
+        if (meteoDretva.isStop()) {
+            return "OK 15;";
+        }
+        if (meteoDretva.isRunning()) {
+            return "OK 14;";
+        }
+        return "OK 13;";
+    }
 }
