@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -28,6 +29,7 @@ public class ObradaZahtjeva extends Thread {
     private OutputStream outputStream;
     private final ServletContext context;
     private MeteoDretva meteoDretva = null;
+    private Statement statement = null;
 
     public ObradaZahtjeva(Socket client, ServletContext context, MeteoDretva meteoDretva) {
         this.client = client;
@@ -45,6 +47,7 @@ public class ObradaZahtjeva extends Thread {
         try {
             inputStream = client.getInputStream();
             outputStream = client.getOutputStream();
+            statement = Helper.getStatement(context);
             String regexMain = "USER ([\\w]+); PASSWD ([\\w]+);\\s?(IoT|IoT_Master|PAUSE|START|STOP|STATUS)?;?\\s?([\\w]+)?;?";
             String odgovor = "";
 
@@ -54,44 +57,50 @@ public class ObradaZahtjeva extends Thread {
 
             Pattern pattern = Pattern.compile(regexMain);
             Matcher matcher = pattern.matcher(naredba);
+            statement = Helper.getStatement(context);
             if (matcher.matches()) {
-                if (matcher.group(3) == null) {
-                    System.out.println("--- OBRADA --- samo korisnik: " + matcher.group(1) + " " + matcher.group(2));
-                    try {
-                        odgovor = AdminObrada.autentikacija(matcher.group(1), matcher.group(2), context);
-                    } catch (ClassNotFoundException | SQLException ex) {
-                        Logger.getLogger(ObradaZahtjeva.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else if (matcher.groupCount() < 4) {
-                    System.out.println("--- OBRADA --- Nije unesen zadnji argument");
-                    
-                } else if (matcher.group(3).equals("IoT_Master")) {
-                    System.out.println("--- OBRADA --- IoT_Master: " + matcher.group(1) + " " + matcher.group(3) + " " + matcher.group(4));
-                    
-                } else if (matcher.group(3).equals("IoT")) {
-                    System.out.println("--- OBRADA --- IoT: " + matcher.group(1) + " " + matcher.group(3) + " " + matcher.group(4));
-                    
-                } else if(matcher.group(3).equals("PAUSE")){
-                    System.out.println("--- OBRADA --- ADmin Pause");
-                    odgovor = AdminObrada.pauzirajServer(meteoDretva);
-                    
-                } else if(matcher.group(3).equals("START")) {
-                    System.out.println("--- OBRADA --- Admin Start");
-                    odgovor = AdminObrada.pokreniServer(meteoDretva);
-                    
-                    
-                } else if(matcher.group(3).equals("STOP")){
-                    System.out.println("--- OBRADA --- Admin Stop");
-                    //TODO Blokirati unos komadi kad je socket server ugašen
-                    odgovor = AdminObrada.zaustaviServer(meteoDretva);
-                    
-                } else if(matcher.group(3).equals("STATUS")){
-                    System.out.println("--- OBRADA --- Admin Status");
-                    odgovor = AdminObrada.uRadu(meteoDretva);
+                int id = Helper.checkLogin(matcher.group(1), matcher.group(2), statement);
+                if (id > 0) {
+                    if (matcher.group(3) == null) {
+                        System.out.println("--- OBRADA --- samo korisnik: " + matcher.group(1) + " " + matcher.group(2));
+                        Helper.log(id, 1, "Zahtjev - Provjera podataka", statement);
+                        try {
+                            odgovor = AdminObrada.autentikacija(matcher.group(1), matcher.group(2), context);
+                        } catch (ClassNotFoundException | SQLException ex) {
+                            Logger.getLogger(ObradaZahtjeva.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else if (matcher.groupCount() < 4) {
+                        System.out.println("--- OBRADA --- Nije unesen zadnji argument");
 
-                } else {
-                    System.out.println("--- OBRADA --- Nepoznata naredba!");
-                    
+                    } else if (matcher.group(3).equals("IoT_Master")) {
+                        System.out.println("--- OBRADA --- IoT_Master: " + matcher.group(1) + " " + matcher.group(3) + " " + matcher.group(4));
+
+                    } else if (matcher.group(3).equals("IoT")) {
+                        System.out.println("--- OBRADA --- IoT: " + matcher.group(1) + " " + matcher.group(3) + " " + matcher.group(4));
+
+                    } else if (matcher.group(3).equals("PAUSE")) {
+                        System.out.println("--- OBRADA --- ADmin Pause");
+                        odgovor = AdminObrada.pauzirajServer(meteoDretva);
+                        Helper.log(id, 1, "Zahtjev - Pauziraj server", statement);
+                    } else if (matcher.group(3).equals("START")) {
+                        System.out.println("--- OBRADA --- Admin Start");
+                        odgovor = AdminObrada.pokreniServer(meteoDretva);
+                        Helper.log(id, 1, "Zahtjev - Pokreni server", statement);
+                    } else if (matcher.group(3).equals("STOP")) {
+                        System.out.println("--- OBRADA --- Admin Stop");
+                        //TODO Blokirati unos komadi kad je socket server ugašen
+                        odgovor = AdminObrada.zaustaviServer(meteoDretva);
+                        Helper.log(id, 1, "Zahtjev - Zaustavi server", statement);
+
+                    } else if (matcher.group(3).equals("STATUS")) {
+                        System.out.println("--- OBRADA --- Admin Status");
+                        odgovor = AdminObrada.uRadu(meteoDretva);
+                        Helper.log(id, 1, "Zahtjev - Status servera", statement);
+
+                    } else {
+                        System.out.println("--- OBRADA --- Nepoznata naredba!");
+
+                    }
                 }
             } else {
                 System.out.println("--- OBRADA --- Nepoznato");
@@ -100,7 +109,7 @@ public class ObradaZahtjeva extends Thread {
             outputStream.write(odgovor.getBytes());
             outputStream.flush();
 
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ObradaZahtjeva.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {

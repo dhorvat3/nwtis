@@ -57,4 +57,13 @@ public final class Helper {
         System.out.println("- ADMIN - autentikacija ID: " + index);
         return index;
     }
+    
+    public static void log(int userId, int type, String description, Statement statement) throws SQLException{
+        String query = "INSERT INTO dnevnik (tip, opis, id_korisnik) VALUES (";
+        query += type + ", '";
+        query += description + "', ";
+        query += userId;
+        query += ")";
+        statement.executeUpdate(query);
+    }
 }
