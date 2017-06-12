@@ -8,9 +8,10 @@
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
         crossorigin="anonymous"></script>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Pregled IoT sustava</title>
+        <title>Prijava u sustav</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="css/style.css" type="text/css"/>
     </h:head>
     <h:body>
         <div class="container">
@@ -19,6 +20,19 @@
                 <a type="button" class="btn btn-primary" href="/dhorvat3_aplikacija_1/PregledKorisnika">Pregled korisnika</a>
                 <a type="button" class="btn btn-primary" href="/dhorvat3_aplikacija_1/Prijava">Prijava u sustav</a>
             </div>
+        </div>
+        <div class="container content">
+            <form class="form-inline" method="post" action="/dhorvat3_aplikacija_1/ProvjeraKorisnika">
+                <label for="ki">
+                    Korisničko ime:
+                </label>
+                <input name="ki" id="ki" type="text" maxlength="10" size="10" /><br />
+                <label for="lo">
+                    Lozinka;
+                </label>
+                <input name="lo" id="lo" type="password" maxlength="10" /> <br/>
+                <input type="submit" value="Prijavi se" />
+            </form>
         </div>
     </h:body>
 </html>

@@ -13,13 +13,15 @@
         <listener-class>org.foi.nwtis.dhorvat3.web.slusaci.SlusacAplikacije</listener-class>
     </listener>
     <servlet>
-        <servlet-name>Faces Servlet</servlet-name>
-        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
+        <servlet-name>Kontroler</servlet-name>
+        <servlet-class>org.foi.nwtis.dhorvat3.web.kontrole.Kontroler</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/faces/*</url-pattern>
+        <servlet-name>Kontroler</servlet-name>
+        <url-pattern>/Kontroler</url-pattern>
+        <url-pattern>/PregledKorisnika</url-pattern>
+        <url-pattern>/Prijava</url-pattern>
+        <url-pattern>/ProvjeraKorisnika</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -29,4 +31,8 @@
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
+    <error-page>
+        <exception-type>org.foi.nwtis.dhorvat3.web.NeuspjesnaPrijava</exception-type>
+        <location>/index.xthml</location>
+    </error-page>
 </web-app>
