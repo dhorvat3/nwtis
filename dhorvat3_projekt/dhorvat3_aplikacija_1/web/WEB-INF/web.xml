@@ -20,7 +20,10 @@
         <servlet-name>Kontroler</servlet-name>
         <url-pattern>/Kontroler</url-pattern>
         <url-pattern>/PregledKorisnika</url-pattern>
+        <url-pattern>/PregledDnevnika</url-pattern>
+        <url-pattern>/PregledZahtjeva</url-pattern>
         <url-pattern>/Prijava</url-pattern>
+        <url-pattern>/Odjava</url-pattern>
         <url-pattern>/ProvjeraKorisnika</url-pattern>
     </servlet-mapping>
     <session-config>

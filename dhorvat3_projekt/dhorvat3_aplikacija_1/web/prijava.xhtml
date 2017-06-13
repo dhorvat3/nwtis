@@ -1,7 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <script
             src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -16,21 +17,21 @@
     <h:body>
         <div class="container">
             <div class="btn-group container navbar-fixed-top">
-                <a type="button" class="btn btn-primary" href="/dhorvat3_aplikacija_1/Kontroler">Početna</a>
-                <a type="button" class="btn btn-primary" href="/dhorvat3_aplikacija_1/PregledKorisnika">Pregled korisnika</a>
-                <a type="button" class="btn btn-primary" href="/dhorvat3_aplikacija_1/Prijava">Prijava u sustav</a>
+                <ui:repeat value="#{menu.menu}" var="link">
+                    <a type="button" class="btn btn-primary" href="#{link.vrijednost}">#{link.labela}</a>
+                </ui:repeat>
             </div>
         </div>
         <div class="container content">
             <form class="form-inline" method="post" action="/dhorvat3_aplikacija_1/ProvjeraKorisnika">
-                <label for="ki">
+                <label for="username">
                     Korisničko ime:
                 </label>
-                <input name="ki" id="ki" type="text" maxlength="10" size="10" /><br />
-                <label for="lo">
+                <input name="username" id="ki" type="text" maxlength="10" size="10" /><br />
+                <label for="pass">
                     Lozinka;
                 </label>
-                <input name="lo" id="lo" type="password" maxlength="10" /> <br/>
+                <input name="pass" id="lo" type="password" maxlength="10" /> <br/>
                 <input type="submit" value="Prijavi se" />
             </form>
         </div>

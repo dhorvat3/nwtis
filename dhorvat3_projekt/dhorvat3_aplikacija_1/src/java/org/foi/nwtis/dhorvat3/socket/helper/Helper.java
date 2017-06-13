@@ -13,7 +13,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.foi.nwtis.dhorvat3.konfiguracije.bp.BP_Konfiguracija;
+import org.foi.nwtis.dhorvat3.web.NeuspjesnaPrijava;
+import org.foi.nwtis.dhorvat3.web.podaci.Korisnik;
 
 /**
  *
@@ -48,7 +52,7 @@ public final class Helper {
     public static int checkLogin(String userName, String pass, Statement statement) throws SQLException{
         ResultSet rs;
         String query = "SELECT * FROM korisnici WHERE korIme='" + userName + "' AND pass='" + pass + "'";
-        System.out.println("- ADMIN - autentikacija SQL: " + query);
+        System.out.println("- Provjera logina SQL: " + query);
         rs = statement.executeQuery(query);
         int index = 0;
         while(rs.next()){
@@ -56,6 +60,32 @@ public final class Helper {
         }
         System.out.println("- ADMIN - autentikacija ID: " + index);
         return index;
+    }
+    
+    public static Korisnik getUser(int id, Statement statement, HttpServletRequest request) throws SQLException, NeuspjesnaPrijava{
+        ResultSet rs;
+        String username = "";
+        String name = "";
+        String surname = "";
+        Korisnik k = null;
+        
+        String query = "SELECT korime, ime, prezime FROM korisnici WHERE id=" + id;
+        System.out.println("- DOHVAĆANJE KORISNIKA SQL: " + query);
+        rs = statement.executeQuery(query);
+        
+        while(rs.next()){
+            username = rs.getString("korime");
+            name = rs.getString("ime");
+            surname = rs.getString("prezime");
+        }
+        
+        if("".equals(username) ||"".equals(name) || "".equals(surname)){
+            throw new NeuspjesnaPrijava("Nepostojeći korisnik");
+        }
+        
+        k = new Korisnik(username, name, surname, request.getRemoteAddr(), request.getSession().getId(), 0);
+        
+        return k;
     }
     
     public static void log(int userId, int type, String description, Statement statement) throws SQLException{
