@@ -46,7 +46,7 @@ public class Kontroler extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         ServletContext context = request.getServletContext();
-        
+
         try {
             statement = Helper.getStatement(context);
         } catch (ClassNotFoundException | SQLException ex) {
@@ -67,26 +67,31 @@ public class Kontroler extends HttpServlet {
                 }
                 break;
             case "/PregledDnevnika":
-                if (request.getSession().getAttribute("korisnik") == null)
+                if (request.getSession().getAttribute("korisnik") == null) {
                     odrediste = "/prijava.xhtml";
-                else
+                } else {
                     odrediste = "/pregledDnevnika.xhtml";
+                }
                 break;
             case "/PregledZahtjeva":
-                if(request.getSession().getAttribute("korisnik") == null)
+                if (request.getSession().getAttribute("korisnik") == null) {
                     odrediste = "/prijava.xhtml";
-                else 
+                } else {
                     odrediste = "/pregledZahtjeva.xhtml";
+                }
                 break;
-            case "/ProvjeraKorisnika": {
+            case "/ProvjeraKorisnika":
                 try {
                     provjeriKorisnika(request);
+                    odrediste = "/index.xhtml";
                 } catch (SQLException ex) {
                     Logger.getLogger(Kontroler.class.getName()).log(Level.SEVERE, null, ex);
+                    odrediste = "/greska.xhtml";
+                } catch (NeuspjesnaPrijava ex){
+                    odrediste = "/greska.xhtml";
                 }
-            }
-            odrediste = "/index.xhtml";
-            break;
+                
+                break;
             case "/Prijava":
                 odrediste = "/prijava.xhtml";
                 break;

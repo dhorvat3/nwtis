@@ -36,6 +36,6 @@
     </welcome-file-list>
     <error-page>
         <exception-type>org.foi.nwtis.dhorvat3.web.NeuspjesnaPrijava</exception-type>
-        <location>/index.xthml</location>
+        <location>/greska.xthml</location>
     </error-page>
 </web-app>

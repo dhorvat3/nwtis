@@ -66,7 +66,7 @@ public class SlusacAplikacije implements ServletContextListener {
         socketServer = new SocketServer(context, meteoDretva);
         socketServer.start();
 
-        SocketClient socketClient = new SocketClient();
+        /*SocketClient socketClient = new SocketClient();
         try {
             socketClient.connect();
             socketClient.sendMessage("USER pero; PASSWD pass; STATUS;");
@@ -77,7 +77,7 @@ public class SlusacAplikacije implements ServletContextListener {
 
         } catch (IOException ex) {
             Logger.getLogger(SlusacAplikacije.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
 
     }
 
