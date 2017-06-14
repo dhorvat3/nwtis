@@ -35,13 +35,14 @@ public class SlusacAplikacije implements ServletContextListener {
 
     private SocketServer socketServer = null;
     private MeteoDretva meteoDretva = null;
+    private static ServletContext context = null;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         int interval = 2;
         String apiKey = "";
         
-        ServletContext context = sce.getServletContext();
+        context = sce.getServletContext();
         String datoteka = context.getRealPath("/WEB-INF") + File.separator + context.getInitParameter("konfiguracija");
 
         BP_Konfiguracija bp_konfig = new BP_Konfiguracija(datoteka);
@@ -89,5 +90,10 @@ public class SlusacAplikacije implements ServletContextListener {
             Logger.getLogger(SlusacAplikacije.class.getName()).log(Level.SEVERE, null, ex);
         }
         meteoDretva.setStop(true);
+    }
+    
+    public static ServletContext getContext(){
+        //TODO prebaciti sve ostale na ovakvo dohvaćanje
+        return context;
     }
 }

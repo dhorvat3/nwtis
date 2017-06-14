@@ -49,6 +49,14 @@ public final class Helper {
         return connection.createStatement();
     }
     
+    /**
+     * @deprecated Use dohvatiId
+     * @param userName
+     * @param pass
+     * @param statement
+     * @return
+     * @throws SQLException 
+     */
     public static int checkLogin(String userName, String pass, Statement statement) throws SQLException{
         ResultSet rs;
         String query = "SELECT * FROM korisnici WHERE korIme='" + userName + "' AND pass='" + pass + "'";
@@ -58,6 +66,21 @@ public final class Helper {
         while(rs.next()){
             index = rs.getInt("id");
         }
+        System.out.println("- ADMIN - autentikacija ID: " + index);
+        return index;
+    }
+    
+    public static int dohvatiId(String userName, String pass, Statement statement) throws SQLException, NeuspjesnaPrijava{
+        ResultSet rs;
+        String query = "SELECT * FROM korisnici WHERE korIme='" + userName + "' AND pass='" + pass + "'";
+        System.out.println("- Provjera logina SQL: " + query);
+        rs = statement.executeQuery(query);
+        int index = 0;
+        while(rs.next()){
+            index = rs.getInt("id");
+        }
+        if(index == 0)
+            throw new NeuspjesnaPrijava("Neispavni login podaci");
         System.out.println("- ADMIN - autentikacija ID: " + index);
         return index;
     }
