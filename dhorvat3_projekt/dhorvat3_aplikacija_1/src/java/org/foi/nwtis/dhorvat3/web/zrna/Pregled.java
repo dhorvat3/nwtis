@@ -36,8 +36,10 @@ public class Pregled {
     private ArrayList<Izbornik> menu = new ArrayList();
     private List<Korisnik> korisnici = new ArrayList();
     private List<Dnevnik> zahtjevi = new ArrayList();
+    private List<Dnevnik> dnevnik = new ArrayList();
     private int trenutnaStranicaKorisnika = 1;
     private int trenutnaStranicaZahtjev = 1;
+    private int trenutnaStranicaDnevnik = 1;
     private ExternalContext context;
     private int korak = 0;
     private Statement statement;
@@ -126,6 +128,32 @@ public class Pregled {
     public void setTrenutnaStranicaZahtjev(int trenutnaStranicaZahtjev) {
         this.trenutnaStranicaZahtjev = trenutnaStranicaZahtjev;
     }
+
+    public List<Dnevnik> getDnevnik() {
+        if(trenutnaStranicaDnevnik == 1 || dnevnik.isEmpty()){
+            dnevnik.clear();
+            try {
+                dnevnik = dohvatiDnevnik(trenutnaStranicaDnevnik);
+            } catch (SQLException ex) {
+                Logger.getLogger(Pregled.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return dnevnik;
+    }
+
+    public void setDnevnik(List<Dnevnik> dnevnik) {
+        this.dnevnik = dnevnik;
+    }
+
+    public int getTrenutnaStranicaDnevnik() {
+        return trenutnaStranicaDnevnik;
+    }
+
+    public void setTrenutnaStranicaDnevnik(int trenutnaStranicaDnevnik) {
+        this.trenutnaStranicaDnevnik = trenutnaStranicaDnevnik;
+    }
+    
     
     
 
@@ -192,6 +220,27 @@ public class Pregled {
         }
     }
     
+    public void prethodniDnevnik(){
+        dnevnik.clear();
+        try {
+            if(trenutnaStranicaDnevnik > 1)
+                dnevnik = dohvatiDnevnik(--trenutnaStranicaDnevnik);
+        } catch (SQLException ex) {
+            Logger.getLogger(Pregled.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void slijedeciDnevnik(){
+        dnevnik.clear();
+        try {
+            dnevnik = dohvatiDnevnik(++trenutnaStranicaDnevnik);
+            if (dnevnik.isEmpty()) 
+                trenutnaStranicaDnevnik--;
+        } catch (SQLException ex) {
+            Logger.getLogger(Pregled.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private List<Dnevnik> dohvatiZahtjeve(int stranica) throws SQLException{
         List<Dnevnik> stranicaZahtjeva = new ArrayList();
         ResultSet rs;
@@ -235,5 +284,50 @@ public class Pregled {
         }
         
         return stranicaZahtjeva;
+    }
+    
+    private List<Dnevnik> dohvatiDnevnik(int stranica) throws SQLException {
+        List<Dnevnik> stranicaDnevnika = new ArrayList();
+        ResultSet rs;
+        stranica--;
+        
+        String sql = "SELECT * FROM dnevnik WHERE tip=2 ORDER BY ID OFFSET " + (stranica * korak) + " ROWS FETCH FIRST " + korak + " ROWS ONLY";
+        rs = statement.executeQuery(sql);
+        while(rs.next()){
+            int id = rs.getInt("id");
+            int tip = rs.getInt("tip");
+            String opis = rs.getString("opis");
+            String vrijeme = rs.getString("vrijeme");
+            
+            int idKorisnik = rs.getInt("id_korisnik");
+            
+            ResultSet rsKorisnik;
+            Korisnik korisnik = null;
+            try {
+                Statement statementZ = Helper.getStatement((ServletContext) context.getContext());
+                String sqlKorisnik = "SELECT korime, ime, prezime FROM korisnici WHERE id=" + idKorisnik;
+                rsKorisnik = statementZ.executeQuery(sqlKorisnik);
+                
+                while(rsKorisnik.next()){
+                    String username = rsKorisnik.getString("korime");
+                    String name = rsKorisnik.getString("ime");
+                    String surname = rsKorisnik.getString("prezime");
+                    korisnik = new Korisnik(username, name, surname, "", "", 0);
+                }
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Pregled.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+            Dnevnik d = new Dnevnik();
+            d.setId(id);
+            d.setTip(tip);
+            d.setKorisnik(korisnik);
+            d.setOpis(opis);
+            d.setVrijeme(vrijeme);
+            stranicaDnevnika.add(d);
+        }
+        
+        return stranicaDnevnika;
     }
 }

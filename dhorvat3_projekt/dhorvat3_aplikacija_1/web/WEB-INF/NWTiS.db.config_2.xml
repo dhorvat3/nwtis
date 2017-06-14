@@ -15,5 +15,5 @@
 <entry key="driver.database.postgresql">org.postgresql.Driver</entry>
 <entry key="intervalDretveZaMeteoPodatke">50</entry>
 <entry key="apikey">c4da75e15a5cf5831514c92b85add116</entry>
-<entry key="broj_zapisa">5</entry>
+<entry key="broj_zapisa">50</entry>
 </properties>

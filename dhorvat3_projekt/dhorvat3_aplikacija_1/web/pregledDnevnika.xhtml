@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <script
             src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -20,6 +21,33 @@
                 <ui:repeat value="#{pregled.menu}" var="link">
                     <a type="button" class="btn btn-primary" href="#{link.vrijednost}">#{link.labela}</a>
                 </ui:repeat>
+            </div>
+            <div class="container content">
+                <h:outputText value="Pregled dnevnika" />
+                <h:dataTable value="#{pregled.dnevnik}" id="dnevnik" var="r">
+                    <h:column>
+                        <f:facet name="header">Opis</f:facet>
+                        <h:outputText value="#{r.opis}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Korisnik</f:facet>
+                        <h:outputText value="#{r.korisnik.korisnickoIme}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Vrijeme</f:facet>
+                        <h:outputText value="#{r.vrijeme}" />
+                    </h:column>
+                </h:dataTable>
+                <h:form>
+                    <h:commandButton value="Prethodna" action="#{pregled.prethodniDnevnik()}" class="btn btn-primary">
+                        <f:ajax render="dnevnik trenutna" />
+                    </h:commandButton>
+                    <h:outputText id="trenutna" value="#{pregled.trenutnaStranicaDnevnik}" />
+                    <h:commandButton value="Slijedeća" action="#{pregled.slijedeciDnevnik()}" class="btn btn-primary">
+                        <f:ajax render="dnevnik trenutna" />
+                    </h:commandButton>
+                </h:form>
+
             </div>
         </div>
     </h:body>

@@ -23,8 +23,8 @@
                 </ui:repeat>
             </div>
             <div class="container content">
-                <h:outputText value="Pregled dnevnika" />
-                <h:dataTable value="#{pregled.zahtjevi}" id="dnevnik" var="r">
+                <h:outputText value="Pregled zahtjeva" />
+                <h:dataTable value="#{pregled.zahtjevi}" id="zahtjevi" var="r">
                     <h:column>
                         <f:facet name="header">Opis</f:facet>
                         <h:outputText value="#{r.opis}" />
@@ -40,11 +40,11 @@
                 </h:dataTable>
                 <h:form>
                     <h:commandButton value="Prethodna" action="#{pregled.prethodniZahtjevi()}" class="btn btn-primary">
-                        <f:ajax render="dnevnik trenutna" />
+                        <f:ajax render="zahtjevi trenutna" />
                     </h:commandButton>
                     <h:outputText id="trenutna" value="#{pregled.trenutnaStranicaZahtjev}" />
                     <h:commandButton value="Slijedeća" action="#{pregled.slijedeciZahtjevi()}" class="btn btn-primary">
-                        <f:ajax render="dnevnik trenutna" />
+                        <f:ajax render="zahtjevi trenutna" />
                     </h:commandButton>
                 </h:form>
             </div>
