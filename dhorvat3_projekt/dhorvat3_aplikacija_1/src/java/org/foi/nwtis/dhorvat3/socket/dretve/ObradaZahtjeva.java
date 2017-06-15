@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
+import org.foi.nwtis.dhorvat3.konfiguracije.Konfiguracija;
 import org.foi.nwtis.dhorvat3.socket.helper.Helper;
 
 /**
@@ -74,26 +75,63 @@ public class ObradaZahtjeva extends Thread {
 
                     } else if (matcher.group(3).equals("IoT_Master")) {
                         System.out.println("--- OBRADA --- IoT_Master: " + matcher.group(1) + " " + matcher.group(3) + " " + matcher.group(4));
+                        Konfiguracija konfig = (Konfiguracija) context.getAttribute("Server_Konfig");
+                        String masterUsername = konfig.dajPostavku("IoT_Master_username");
+                        String masterPass = konfig.dajPostavku("IoT_Master_pass");
+                        
+                        switch (matcher.group(4)) {
+                            case "START":
+                                odgovor = IoTMasterObrada.aktivirajGrupu(masterUsername, masterPass);
+                                Helper.log(id, 1, "Zahtjev - registriraj grupu", statement);
+                                break;
+                            case "STOP":
+                                odgovor = IoTMasterObrada.blokirajGrupu(masterUsername, masterPass);
+                                Helper.log(id, 1, "Zahtjev - odjavi grupu", statement);
+                                break;
+                            case "WORK":
+                                odgovor = IoTMasterObrada.aktivirajGrupu(masterUsername, masterPass);
+                                Helper.log(id, 1, "Zahtjev - aktiviraj grupu", statement);
+                                break;
+                            case "LOAD":
+                                odgovor = IoTMasterObrada.ucitajUredaje(masterUsername, masterPass);
+                                Helper.log(id, 1, "Zahtjev - učitaj uređaje", statement);
+                                break;
+                            case "CLEAR":
+                                odgovor = IoTMasterObrada.brisiUredaje(masterUsername, masterPass);
+                                Helper.log(id, 1, "Zahtjev - briši uređaje", statement);
+                                break;
+                            case "STATUS":
+                                odgovor = IoTMasterObrada.statusGrupe(masterUsername, masterPass);
+                                Helper.log(id, 1, "Zahtjev - status grupe", statement);
+                                break;
+                            case "LIST":
+                                odgovor = IoTMasterObrada.dajUredaje(masterUsername, masterPass);
+                                Helper.log(id, 1, "Zahtjev - dohvati uređaje", statement);
+                                break;
+                            default:
+                                odgovor = "Nepoznata naredba";
+                                break;
+                        }
 
                     } else if (matcher.group(3).equals("IoT")) {
                         System.out.println("--- OBRADA --- IoT: " + matcher.group(1) + " " + matcher.group(3) + " " + matcher.group(4));
 
                     } else if (matcher.group(3).equals("PAUSE")) {
-                        System.out.println("--- OBRADA --- ADmin Pause");
+                        //System.out.println("--- OBRADA --- ADmin Pause");
                         odgovor = AdminObrada.pauzirajServer(meteoDretva);
                         Helper.log(id, 1, "Zahtjev - Pauziraj server", statement);
                     } else if (matcher.group(3).equals("START")) {
-                        System.out.println("--- OBRADA --- Admin Start");
+                        //System.out.println("--- OBRADA --- Admin Start");
                         odgovor = AdminObrada.pokreniServer(meteoDretva);
                         Helper.log(id, 1, "Zahtjev - Pokreni server", statement);
                     } else if (matcher.group(3).equals("STOP")) {
-                        System.out.println("--- OBRADA --- Admin Stop");
+                        //System.out.println("--- OBRADA --- Admin Stop");
                         //TODO Blokirati unos komadi kad je socket server ugašen
                         odgovor = AdminObrada.zaustaviServer(meteoDretva);
                         Helper.log(id, 1, "Zahtjev - Zaustavi server", statement);
 
                     } else if (matcher.group(3).equals("STATUS")) {
-                        System.out.println("--- OBRADA --- Admin Status");
+                        //System.out.println("--- OBRADA --- Admin Status");
                         odgovor = AdminObrada.uRadu(meteoDretva);
                         Helper.log(id, 1, "Zahtjev - Status servera", statement);
 

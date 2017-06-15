@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.foi.nwtis.dhorvat3.konfiguracije.bp.BP_Konfiguracija;
 import org.foi.nwtis.dhorvat3.web.NeuspjesnaPrijava;
 import org.foi.nwtis.dhorvat3.web.podaci.Korisnik;
