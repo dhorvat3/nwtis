@@ -17,6 +17,7 @@ public class Korisnik {
     private String ipAdresa;
     private String sesijaId;
     private int vrsta;
+    private int id;
 
     public Korisnik(String korisnickoIme, String ime, String prezime, String ipAdresa, String sesijaId, int vrsta) {
         this.korisnickoIme = korisnickoIme;
@@ -25,6 +26,10 @@ public class Korisnik {
         this.ipAdresa = ipAdresa;
         this.sesijaId = sesijaId;
         this.vrsta = vrsta;
+    }
+    
+    public Korisnik(){
+        
     }
 
     public int getVrsta() {
@@ -74,4 +79,14 @@ public class Korisnik {
     public void setSesijaId(String sesijaId) {
         this.sesijaId = sesijaId;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    
 }
