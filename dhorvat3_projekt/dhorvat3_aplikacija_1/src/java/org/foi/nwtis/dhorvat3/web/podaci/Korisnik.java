@@ -18,6 +18,7 @@ public class Korisnik {
     private String sesijaId;
     private int vrsta;
     private int id;
+    private String password;
 
     public Korisnik(String korisnickoIme, String ime, String prezime, String ipAdresa, String sesijaId, int vrsta) {
         this.korisnickoIme = korisnickoIme;
@@ -86,6 +87,14 @@ public class Korisnik {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
     
     

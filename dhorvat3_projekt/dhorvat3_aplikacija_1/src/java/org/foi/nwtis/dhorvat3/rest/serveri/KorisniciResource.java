@@ -57,6 +57,11 @@ public class KorisniciResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getJson() {
+        try {
+            Helper.log(1, 2, "REST: Dohvaćanje jednog korisnika", Helper.getStatement(SlusacAplikacije.getContext()));
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(KorisnicisResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Korisnik korisnik = new Korisnik();
         
         try {
@@ -91,6 +96,7 @@ public class KorisniciResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void putJson(String content) {
+        
     }
 
     /**

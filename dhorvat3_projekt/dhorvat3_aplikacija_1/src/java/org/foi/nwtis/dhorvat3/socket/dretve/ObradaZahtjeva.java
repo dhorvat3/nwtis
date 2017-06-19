@@ -240,6 +240,7 @@ public class ObradaZahtjeva extends Thread {
                                     System.out.println("--- OBRADA --- IoT ADD: " + matcherIoT.group(3) + ", " + matcherIoT.group(5).replace("\"", "") + ", " + matcherIoT.group(6).replace("\"", ""));
 
                                     try {
+                                        Helper.log(id, 1, "Zahtjev - Dodaj uredaj", statement);
                                         odgovor = IoTObrada.dodajUredaj(masterUsername, masterPass, Integer.parseInt(matcherIoT.group(3)), matcherIoT.group(5).replace("\"", ""), matcherIoT.group(6).replace("\"", ""));
                                     } catch (NeuspjesnaPrijava ex) {
                                         odgovor = "Prijava neuspješna";
@@ -251,6 +252,7 @@ public class ObradaZahtjeva extends Thread {
                                     System.out.println("--- OBRADA --- IoT WORK" + matcherIoT.group(3));
 
                                     try {
+                                        Helper.log(id, 1, "Zahtjev - Aktiviraj uredaj", statement);
                                         odgovor = IoTObrada.aktivirajUredaj(masterUsername, masterPass, Integer.parseInt(matcherIoT.group(3)));
                                     } catch (NeuspjesnaPrijava ex) {
                                         odgovor = "Prijava neuspješna";
@@ -259,6 +261,7 @@ public class ObradaZahtjeva extends Thread {
 
                                     break;
                                 case "WAIT":
+                                    Helper.log(id, 1, "Zahtjev - Blokiraj uredaj", statement);
                                     System.out.println("--- OBRADA --- IoT WAIT" + matcherIoT.group(4));
 
                                     try {
@@ -273,6 +276,7 @@ public class ObradaZahtjeva extends Thread {
                                     System.out.println("--- OBRADA --- IoT REMOVE" + matcherIoT.group(4));
 
                                     try {
+                                        Helper.log(id, 1, "Zahtjev - Brisi uredaj", statement);
                                         odgovor = IoTObrada.brisiUredaj(masterUsername, masterPass, Integer.parseInt(matcherIoT.group(3)));
                                     } catch (NeuspjesnaPrijava ex) {
                                         odgovor = "Prijava neuspješna";
@@ -284,6 +288,7 @@ public class ObradaZahtjeva extends Thread {
                                     System.out.println("--- OBRADA --- IoT STATUS" + matcherIoT.group(3));
 
                                     try {
+                                        Helper.log(id, 1, "Zahtjev - Status uredaja", statement);
                                         odgovor = IoTObrada.statusUredaja(masterUsername, masterPass, Integer.parseInt(matcherIoT.group(3)));
                                     } catch (NeuspjesnaPrijava ex) {
                                         odgovor = "Prijava neuspješna";
