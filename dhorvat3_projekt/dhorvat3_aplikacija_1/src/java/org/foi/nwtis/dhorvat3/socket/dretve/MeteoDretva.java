@@ -41,6 +41,11 @@ public class MeteoDretva extends Thread {
 
     @Override
     public void interrupt() {
+        try {
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(MeteoDretva.class.getName()).log(Level.SEVERE, null, ex);
+        }
         super.interrupt(); //To change body of generated methods, choose Tools | Templates.
     }
 

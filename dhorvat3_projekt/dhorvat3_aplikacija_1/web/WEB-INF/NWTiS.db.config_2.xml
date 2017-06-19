@@ -18,4 +18,9 @@
 <entry key="broj_zapisa">50</entry>
 <entry key="IoT_Master_username">dhorvat3</entry>
 <entry key="IoT_Master_pass">IRr15</entry>
+<entry key="mail.subject">NWTiS Zahtjev</entry>
+<entry key="mail.server">127.0.0.1</entry>
+<entry key="mail.port">25</entry>
+<entry key="mail.fromUsername">servis@nwtis.nastava.foi.hr</entry>
+<entry key="mail.toUsername">admin@nwtis.nastava.foi.hr</entry>
 </properties>

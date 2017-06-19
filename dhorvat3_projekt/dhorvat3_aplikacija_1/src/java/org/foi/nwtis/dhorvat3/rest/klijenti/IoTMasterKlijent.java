@@ -11,7 +11,7 @@ import org.foi.nwtis.dkermek.ws.serveri.StatusKorisnika;
  *
  * @author Davorin Horvat
  */
-public class IoT_MasterKlijent {
+public class IoTMasterKlijent {
 
     public static Boolean registrirajGrupuIoT(java.lang.String korisnickoIme, java.lang.String korisnickaLozinka) {
         org.foi.nwtis.dkermek.ws.serveri.IoTMaster_Service service = new org.foi.nwtis.dkermek.ws.serveri.IoTMaster_Service();
@@ -59,6 +59,12 @@ public class IoT_MasterKlijent {
         org.foi.nwtis.dkermek.ws.serveri.IoTMaster_Service service = new org.foi.nwtis.dkermek.ws.serveri.IoTMaster_Service();
         org.foi.nwtis.dkermek.ws.serveri.IoTMaster port = service.getIoTMasterPort();
         return port.dajSveUredjajeGrupe(korisnickoIme, korisnickaLozinka);
+    }
+
+    public static Boolean autenticirajGrupuIoT(java.lang.String korisnickoIme, java.lang.String korisnickaLozinka) {
+        org.foi.nwtis.dkermek.ws.serveri.IoTMaster_Service service = new org.foi.nwtis.dkermek.ws.serveri.IoTMaster_Service();
+        org.foi.nwtis.dkermek.ws.serveri.IoTMaster port = service.getIoTMasterPort();
+        return port.autenticirajGrupuIoT(korisnickoIme, korisnickaLozinka);
     }
     
     

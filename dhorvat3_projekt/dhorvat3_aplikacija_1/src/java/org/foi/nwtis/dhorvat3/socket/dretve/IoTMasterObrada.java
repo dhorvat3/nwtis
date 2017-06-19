@@ -6,7 +6,8 @@
 package org.foi.nwtis.dhorvat3.socket.dretve;
 
 import java.util.List;
-import org.foi.nwtis.dhorvat3.rest.klijenti.IoT_MasterKlijent;
+import org.foi.nwtis.dhorvat3.rest.klijenti.IoTMasterKlijent;
+import org.foi.nwtis.dhorvat3.web.NeuspjesnaPrijava;
 import org.foi.nwtis.dkermek.ws.serveri.StatusKorisnika;
 import org.foi.nwtis.dkermek.ws.serveri.Uredjaj;
 
@@ -16,32 +17,52 @@ import org.foi.nwtis.dkermek.ws.serveri.Uredjaj;
  */
 public final class IoTMasterObrada {
     
-    protected static String registrirajGrupu(String username, String password){
-        return IoT_MasterKlijent.registrirajGrupuIoT(username, password) ? "OK 10;" : "ERR 20;";
+    protected static String registrirajGrupu(String username, String password) throws NeuspjesnaPrijava{
+        if(!IoTMasterKlijent.autenticirajGrupuIoT(username, password))
+            throw new NeuspjesnaPrijava("Neispravni podaci za prijavu");
+        
+        return IoTMasterKlijent.registrirajGrupuIoT(username, password) ? "OK 10;" : "ERR 20;";
     }
     
-    protected static String odjaviGrupu(String username, String password){
-        return IoT_MasterKlijent.deregistrirajGrupuIoT(username, password) ? "OK 10;" : "ERR 21;";
+    protected static String odjaviGrupu(String username, String password) throws NeuspjesnaPrijava{
+        if(!IoTMasterKlijent.autenticirajGrupuIoT(username, password))
+            throw new NeuspjesnaPrijava("Neispravni podaci za prijavu");
+        
+        return IoTMasterKlijent.deregistrirajGrupuIoT(username, password) ? "OK 10;" : "ERR 21;";
     }
     
-    protected static String aktivirajGrupu(String username, String password){
-        return IoT_MasterKlijent.aktivirajGrupuIoT(username, password) ? "OK 10;" : "ERR 22;";
+    protected static String aktivirajGrupu(String username, String password) throws NeuspjesnaPrijava{
+        if(!IoTMasterKlijent.autenticirajGrupuIoT(username, password))
+            throw new NeuspjesnaPrijava("Neispravni podaci za prijavu");
+        
+        return IoTMasterKlijent.aktivirajGrupuIoT(username, password) ? "OK 10;" : "ERR 22;";
     }
     
-    protected static String blokirajGrupu(String username, String password){
-        return IoT_MasterKlijent.blokirajGrupuIoT(username, password) ? "OK 10;" : "ERR 23;";
+    protected static String blokirajGrupu(String username, String password) throws NeuspjesnaPrijava{
+        if(!IoTMasterKlijent.autenticirajGrupuIoT(username, password))
+            throw new NeuspjesnaPrijava("Neispravni podaci za prijavu");
+        
+        return IoTMasterKlijent.blokirajGrupuIoT(username, password) ? "OK 10;" : "ERR 23;";
     }
     
-    protected static String ucitajUredaje(String username, String password){
-        return IoT_MasterKlijent.ucitajSveUredjajeGrupe(username, password) ? "OK 10;" : "";
+    protected static String ucitajUredaje(String username, String password) throws NeuspjesnaPrijava{
+        if(!IoTMasterKlijent.autenticirajGrupuIoT(username, password))
+            throw new NeuspjesnaPrijava("Neispravni podaci za prijavu");
+        return IoTMasterKlijent.ucitajSveUredjajeGrupe(username, password) ? "OK 10;" : "";
     }
     
-    protected static String brisiUredaje(String username, String password){
-        return IoT_MasterKlijent.obrisiSveUredjajeGrupe(username, password) ? "OK 10;" : "" ;
+    protected static String brisiUredaje(String username, String password) throws NeuspjesnaPrijava{
+        if(!IoTMasterKlijent.autenticirajGrupuIoT(username, password))
+            throw new NeuspjesnaPrijava("Neispravni podaci za prijavu");
+        
+        return IoTMasterKlijent.obrisiSveUredjajeGrupe(username, password) ? "OK 10;" : "" ;
     }
     
-    protected static String statusGrupe(String username, String password){
-        StatusKorisnika status = IoT_MasterKlijent.dajStatusGrupeIoT(username, password);
+    protected static String statusGrupe(String username, String password) throws NeuspjesnaPrijava{
+        if(!IoTMasterKlijent.autenticirajGrupuIoT(username, password))
+            throw new NeuspjesnaPrijava("Neispravni podaci za prijavu");
+        
+        StatusKorisnika status = IoTMasterKlijent.dajStatusGrupeIoT(username, password);
         
         if(status.value().equals("BLOKIRAN"))
             return "OK 24;";
@@ -50,8 +71,11 @@ public final class IoTMasterObrada {
         return "";
     }
     
-    protected static String dajUredaje(String username, String password){
-        List<Uredjaj> uredaji = IoT_MasterKlijent.dajSveUredjajeGrupe(username, password);
+    protected static String dajUredaje(String username, String password) throws NeuspjesnaPrijava{
+        if(!IoTMasterKlijent.autenticirajGrupuIoT(username, password))
+            throw new NeuspjesnaPrijava("Neispravni podaci za prijavu");
+        
+        List<Uredjaj> uredaji = IoTMasterKlijent.dajSveUredjajeGrupe(username, password);
         String odgovor = "OK 10;";
         
         for (Uredjaj uredjaj : uredaji) {            

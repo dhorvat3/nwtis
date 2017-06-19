@@ -21,7 +21,7 @@ public class SocketServer extends Thread {
 
     private ServletContext context = null;
     private boolean kraj = true;
-    private int port = 4258;
+    private int port = 5589;
     private ServerSocket serverSocket = null;
     private MeteoDretva meteoDretva = null;
 

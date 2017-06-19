@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class SocketClient {
 
-    private int port = 4258;
+    private int port = 5589;
     private String host = "localhost";
     private Socket socket = null;
     private InputStream inputStream = null;

@@ -70,11 +70,15 @@ public class SlusacAplikacije implements ServletContextListener {
         SocketClient socketClient = new SocketClient();
         try {
             socketClient.connect();
-            socketClient.sendMessage("USER pero; PASSWD pass; IoT_Master LIST;");
-            /*socketClient.connect();
-            socketClient.sendMessage("USER pero; PASSWD pass; STATUS;");
+            socketClient.sendMessage("USER pero; PASSWD pass; IoT 15 ADD \"TEST\" \"Varazdin, Pavlinska 2\";");
             socketClient.connect();
-            socketClient.sendMessage("USER pero; PASSWD pass; STATUS;");*/
+            socketClient.sendMessage("USER pero; PASSWD pass; IoT 16 WORK;");
+            socketClient.connect();
+            socketClient.sendMessage("USER pero; PASSWD pass; IoT 17 STATUS;");
+            socketClient.connect();
+            socketClient.sendMessage("USER pero; PASSWD pass; IoT 18 REMOVE;");
+            socketClient.connect();
+            socketClient.sendMessage("USER pero; PASSWD pass; IoT 19 WAIT;");
 
         } catch (IOException ex) {
             Logger.getLogger(SlusacAplikacije.class.getName()).log(Level.SEVERE, null, ex);
