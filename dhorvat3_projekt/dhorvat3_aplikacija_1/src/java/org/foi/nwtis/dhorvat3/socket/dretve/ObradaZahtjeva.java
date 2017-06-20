@@ -54,6 +54,8 @@ public class ObradaZahtjeva extends Thread {
     public void interrupt() {
         try {
             statement.close();
+            inputStream.close();
+            outputStream.close();
             client.close();
         } catch (SQLException | IOException ex) {
             Logger.getLogger(ObradaZahtjeva.class.getName()).log(Level.SEVERE, null, ex);

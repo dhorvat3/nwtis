@@ -98,7 +98,7 @@ public class PozadinskaDretva extends Thread {
                         upit += "0.0, ";
                         /*upit += mp.getWindSpeedName() + ", ";
                         upit += mp.getWindDirectionName() + ", ";*/
-                        upit += "CURRENT_TIMESTAMP";
+                        upit += "now()";
                         upit += ")";
                         System.out.println("SQL: " + upit);
                         statement3.executeUpdate(upit);

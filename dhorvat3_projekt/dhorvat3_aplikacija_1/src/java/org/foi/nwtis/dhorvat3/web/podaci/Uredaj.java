@@ -13,6 +13,7 @@ public class Uredaj {
     private int id;
     private String naziv;
     private Lokacija geoloc;
+    private String adresa;
 
     public Uredaj() {
     }
@@ -46,4 +47,14 @@ public class Uredaj {
     public void setNaziv(String naziv) {
         this.naziv = naziv;
     }        
+
+    public String getAdresa() {
+        return adresa;
+    }
+
+    public void setAdresa(String adresa) {
+        this.adresa = adresa;
+    }
+    
+    
 }

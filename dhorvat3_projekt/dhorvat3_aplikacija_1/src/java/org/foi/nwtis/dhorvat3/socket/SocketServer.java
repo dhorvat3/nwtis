@@ -10,8 +10,10 @@ import java.net.ServerSocket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
+import org.foi.nwtis.dhorvat3.konfiguracije.Konfiguracija;
 import org.foi.nwtis.dhorvat3.socket.dretve.MeteoDretva;
 import org.foi.nwtis.dhorvat3.socket.dretve.ObradaZahtjeva;
+import org.foi.nwtis.dhorvat3.web.slusaci.SlusacAplikacije;
 
 /**
  *
@@ -21,7 +23,7 @@ public class SocketServer extends Thread {
 
     private ServletContext context = null;
     private boolean kraj = true;
-    private int port = 5589;
+    private int port;
     private ServerSocket serverSocket = null;
     private MeteoDretva meteoDretva = null;
 
@@ -50,6 +52,10 @@ public class SocketServer extends Thread {
     public void run() {
         try {
             System.out.println("--- SOCKET SERVER RUN ---");
+            
+            Konfiguracija konfig = (Konfiguracija) SlusacAplikacije.getContext().getAttribute("Server_Konfig");
+            port = Integer.parseInt(konfig.dajPostavku("socket.port"));
+            
             pokreniServer();
             while (!kraj) {
                 System.out.println("--- SOCKET KORAK ---");

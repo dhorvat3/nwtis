@@ -185,7 +185,8 @@ public class Pregled {
         ResultSet rs;
         stranica--;
 
-        String sql = "SELECT * FROM KORISNICI ORDER BY ID OFFSET " + (stranica * korak) + " ROWS FETCH FIRST " + korak + " ROWS ONLY";
+        //String sql = "SELECT * FROM KORISNICI ORDER BY ID OFFSET " + (stranica * korak) + " ROWS FETCH FIRST " + korak + " ROWS ONLY";
+        String sql = "SELECT * FROM korisnici ORDER BY id LIMIT " + (stranica * korak) + ", " + korak + ";"; 
         rs = statement.executeQuery(sql);
         while (rs.next()) {
             String username = rs.getString("korime");
@@ -246,7 +247,8 @@ public class Pregled {
         ResultSet rs;
         stranica--;
         
-        String sql = "SELECT * FROM dnevnik WHERE tip=1 ORDER BY ID OFFSET " + (stranica * korak) + " ROWS FETCH FIRST " + korak + " ROWS ONLY";
+        //String sql = "SELECT * FROM dnevnik WHERE tip=1 ORDER BY ID OFFSET " + (stranica * korak) + " ROWS FETCH FIRST " + korak + " ROWS ONLY";
+        String sql = "SELECT * FROM dnevnik WHERE tip=1 ORDER BY id LIMIT " + (stranica * korak) + ", " + korak + ";"; 
         rs = statement.executeQuery(sql);
         while(rs.next()){
             int id = rs.getInt("id");
@@ -291,7 +293,8 @@ public class Pregled {
         ResultSet rs;
         stranica--;
         
-        String sql = "SELECT * FROM dnevnik WHERE tip=2 ORDER BY ID OFFSET " + (stranica * korak) + " ROWS FETCH FIRST " + korak + " ROWS ONLY";
+        //String sql = "SELECT * FROM dnevnik WHERE tip=2 ORDER BY ID OFFSET " + (stranica * korak) + " ROWS FETCH FIRST " + korak + " ROWS ONLY";
+        String sql = "SELECT * FROM dnevnik WHERE tip=2 ORDER BY id LIMIT " + (stranica * korak) + ", " + korak + ";"; 
         rs = statement.executeQuery(sql);
         while(rs.next()){
             int id = rs.getInt("id");

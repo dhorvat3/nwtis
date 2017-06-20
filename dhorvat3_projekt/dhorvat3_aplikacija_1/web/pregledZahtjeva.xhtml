@@ -24,7 +24,7 @@
             </div>
             <div class="container content">
                 <h:outputText value="Pregled zahtjeva" />
-                <h:dataTable value="#{pregled.zahtjevi}" id="zahtjevi" var="r">
+                <h:dataTable class="table table-condensed" value="#{pregled.zahtjevi}" id="zahtjevi" var="r">
                     <h:column>
                         <f:facet name="header">Opis</f:facet>
                         <h:outputText value="#{r.opis}" />
@@ -38,12 +38,12 @@
                         <h:outputText value="#{r.vrijeme}" />
                     </h:column>
                 </h:dataTable>
-                <h:form>
-                    <h:commandButton value="Prethodna" action="#{pregled.prethodniZahtjevi()}" class="btn btn-primary">
+                <h:form class="btn-group">
+                    <h:commandButton value="Prethodna" action="#{pregled.prethodniZahtjevi()}" class="btn btn-success">
                         <f:ajax render="zahtjevi trenutna" />
                     </h:commandButton>
-                    <h:outputText id="trenutna" value="#{pregled.trenutnaStranicaZahtjev}" />
-                    <h:commandButton value="Slijedeća" action="#{pregled.slijedeciZahtjevi()}" class="btn btn-primary">
+                    <h:outputText id="trenutna" value="#{pregled.trenutnaStranicaZahtjev}" class="btn btn-success"/>
+                    <h:commandButton value="Slijedeća" action="#{pregled.slijedeciZahtjevi()}" class="btn btn-success">
                         <f:ajax render="zahtjevi trenutna" />
                     </h:commandButton>
                 </h:form>

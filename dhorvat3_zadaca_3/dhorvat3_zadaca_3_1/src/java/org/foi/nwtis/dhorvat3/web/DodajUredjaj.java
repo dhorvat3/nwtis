@@ -199,7 +199,7 @@ public class DodajUredjaj extends HttpServlet {
             ispravno = false;
         }
         if (ispravno) {
-            String sql = "INSERT INTO UREDAJI (ID, NAZIV, LATITUDE, LONGITUDE, VRIJEME_KREIRANJA) VALUES (" + getMaxID("UREDAJI") + " , '" + naziv + "', " + lokacija.getLatitude() + ", " + lokacija.getLongitude() + ", CURRENT_TIMESTAMP)";
+            String sql = "INSERT INTO UREDAJI (ID, NAZIV, LATITUDE, LONGITUDE, VRIJEME_KREIRANJA) VALUES (" + getMaxID("UREDAJI") + " , '" + naziv + "', " + lokacija.getLatitude() + ", " + lokacija.getLongitude() + ", now())";
             System.out.println("SQL: " + sql);
             try {
                 statement.executeUpdate(sql);

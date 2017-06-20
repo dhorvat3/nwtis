@@ -23,16 +23,16 @@
             </div>
         </div>
         <div class="container content">
-            <form class="form-inline" method="post" action="/dhorvat3_aplikacija_1/ProvjeraKorisnika">
+            <form class="form-inline conatiner" method="post" action="/dhorvat3_aplikacija_1/ProvjeraKorisnika">
                 <label for="username">
                     Korisničko ime:
                 </label>
-                <input name="username" id="ki" type="text" maxlength="10" size="10" /><br />
+                <input class="form-control" name="username" id="ki" type="text" maxlength="10" size="10" /><br />
                 <label for="pass">
-                    Lozinka;
+                    Lozinka:
                 </label>
-                <input name="pass" id="lo" type="password" maxlength="10" /> <br/>
-                <input type="submit" value="Prijavi se" />
+                <input class="form-control" name="pass" id="lo" type="password" maxlength="10" /> <br/>
+                <input class="btn btn-success" type="submit" value="Prijavi se" />
             </form>
         </div>
     </h:body>

@@ -90,7 +90,7 @@ public class MeteoDretva extends Thread {
                     query += meteoPodaci.getTemperatureMax() + ", ";
                     query += meteoPodaci.getHumidityValue() + ", ";
                     query += meteoPodaci.getPressureValue() + ", ";
-                    query += " current_timestamp";
+                    query += " now()";
                     query += ")";
                     System.out.println("- METEO SQL: " + query);
                     try {

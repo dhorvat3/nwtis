@@ -108,7 +108,7 @@ public class GeoMeteoWS {
         if (!"".equals(adresa)) {
             Lokacija lokacija = gmk.getGeoLocation(adresa);
 
-            String sql = "INSERT INTO UREDAJI (ID, NAZIV, LATITUDE, LONGITUDE, VRIJEME_KREIRANJA) VALUES (" + getMaxID("UREDAJI") + " , '" + uredjaj.getNaziv() + "', " + lokacija.getLatitude() + ", " + lokacija.getLongitude() + ", CURRENT_TIMESTAMP)";
+            String sql = "INSERT INTO UREDAJI (ID, NAZIV, LATITUDE, LONGITUDE, VRIJEME_KREIRANJA) VALUES (" + getMaxID("UREDAJI") + " , '" + uredjaj.getNaziv() + "', " + lokacija.getLatitude() + ", " + lokacija.getLongitude() + ", now())";
             System.out.println("SQL: " + sql);
             try {
                 statement.executeUpdate(sql);

@@ -47,75 +47,86 @@ public final class Helper {
 
         return connection.createStatement();
     }
-    
+
     /**
      * @deprecated Use dohvatiId
      * @param userName
      * @param pass
      * @param statement
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
-    public static int checkLogin(String userName, String pass, Statement statement) throws SQLException{
+    public static int checkLogin(String userName, String pass, Statement statement) throws SQLException {
         ResultSet rs;
         String query = "SELECT * FROM korisnici WHERE korIme='" + userName + "' AND pass='" + pass + "'";
         System.out.println("- Provjera logina SQL: " + query);
         rs = statement.executeQuery(query);
         int index = 0;
-        while(rs.next()){
+        while (rs.next()) {
             index = rs.getInt("id");
         }
         System.out.println("- ADMIN - autentikacija ID: " + index);
         return index;
     }
-    
-    public static int dohvatiId(String userName, String pass, Statement statement) throws SQLException, NeuspjesnaPrijava{
+
+    public static int dohvatiId(String userName, String pass, Statement statement) throws SQLException, NeuspjesnaPrijava {
         ResultSet rs;
         String query = "SELECT * FROM korisnici WHERE korIme='" + userName + "' AND pass='" + pass + "'";
         System.out.println("- Provjera logina SQL: " + query);
         rs = statement.executeQuery(query);
         int index = 0;
-        while(rs.next()){
+        while (rs.next()) {
             index = rs.getInt("id");
         }
-        if(index == 0)
+        if (index == 0) {
             throw new NeuspjesnaPrijava("Neispavni login podaci");
+        }
         System.out.println("- ADMIN - autentikacija ID: " + index);
         return index;
     }
-    
-    public static Korisnik getUser(int id, Statement statement, HttpServletRequest request) throws SQLException, NeuspjesnaPrijava{
+
+    public static Korisnik getUser(int id, Statement statement, HttpServletRequest request) throws SQLException, NeuspjesnaPrijava {
         ResultSet rs;
         String username = "";
         String name = "";
         String surname = "";
         Korisnik k = null;
-        
+
         String query = "SELECT korime, ime, prezime FROM korisnici WHERE id=" + id;
         System.out.println("- DOHVAĆANJE KORISNIKA SQL: " + query);
         rs = statement.executeQuery(query);
-        
-        while(rs.next()){
+
+        while (rs.next()) {
             username = rs.getString("korime");
             name = rs.getString("ime");
             surname = rs.getString("prezime");
         }
-        
-        if("".equals(username) ||"".equals(name) || "".equals(surname)){
+
+        if ("".equals(username) || "".equals(name) || "".equals(surname)) {
             throw new NeuspjesnaPrijava("Nepostojeći korisnik");
         }
-        
+
         k = new Korisnik(username, name, surname, request.getRemoteAddr(), request.getSession().getId(), 0);
-        
+
         return k;
     }
-    
-    public static void log(int userId, int type, String description, Statement statement) throws SQLException{
+
+    public static void log(int userId, int type, String description, Statement statement) throws SQLException {
         String query = "INSERT INTO dnevnik (tip, opis, id_korisnik) VALUES (";
         query += type + ", '";
         query += description + "', ";
         query += userId;
         query += ")";
         statement.executeUpdate(query);
+    }
+
+    public static int getMaxId(String table, Statement statement) throws SQLException {
+        String sql = "SELECT MAX(id) FROM " + table;
+        ResultSet rs = statement.executeQuery(sql);
+        int id = 0;
+        if (rs.next()) {
+            id = rs.getInt(1) + 1;
+        }
+        return id;
     }
 }
