@@ -114,7 +114,7 @@ public class KorisnicisResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/noviKorisnik")
-    public int noviKorisnik(final Korisnik korisnik) {
+    public String noviKorisnik(final Korisnik korisnik) {
 
         System.out.println("Korisničko ime: " + korisnik.getKorisnickoIme());
         System.out.println("Ime " + korisnik.getIme());
@@ -122,13 +122,13 @@ public class KorisnicisResource {
         System.out.println("Password " + korisnik.getPassword());
 
         if ("".equals(korisnik.getIme()) || "".equals(korisnik.getKorisnickoIme()) || "".equals(korisnik.getPrezime()) || "".equals(korisnik.getPassword())) {
-            return 0;
+            return "0";
         } else {
             try {
                 Statement statement = Helper.getStatement(SlusacAplikacije.getContext());
                 String sql = "INSERT INTO korisnici(ime, prezime, korime, pass) VALUES ('" + korisnik.getIme() + "', '" + korisnik.getPrezime() + "', '" + korisnik.getKorisnickoIme() + "', '" + korisnik.getPassword() + "')";
                 if (checkUsername(korisnik.getKorisnickoIme())) {
-                    statement.executeUpdate(sql);
+                    statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
                     ResultSet rs = statement.getGeneratedKeys();
                     if (rs.next()) {
                         try {
@@ -137,13 +137,13 @@ public class KorisnicisResource {
                             Logger.getLogger(KorisnicisResource.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                    return 1;
+                    return "1";
                 } else {
-                    return 0;
+                    return "0";
                 }
             } catch (ClassNotFoundException | SQLException ex) {
                 Logger.getLogger(KorisnicisResource.class.getName()).log(Level.SEVERE, null, ex);
-                return 0;
+                return "0";
             }
         }
     }

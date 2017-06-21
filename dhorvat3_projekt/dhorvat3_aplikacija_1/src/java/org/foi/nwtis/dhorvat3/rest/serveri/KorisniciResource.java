@@ -31,7 +31,7 @@ import org.foi.nwtis.dhorvat3.web.slusaci.SlusacAplikacije;
  * @author Davorin Horvat
  */
 public class KorisniciResource {
-
+    
     private String korisnickoIme;
 
     /**
@@ -51,7 +51,9 @@ public class KorisniciResource {
     }
 
     /**
-     * Retrieves representation of an instance of org.foi.nwtis.dhorvat3.rest.serveri.KorisniciResource
+     * Retrieves representation of an instance of
+     * org.foi.nwtis.dhorvat3.rest.serveri.KorisniciResource
+     *
      * @return an instance of java.lang.String
      */
     @GET
@@ -63,17 +65,19 @@ public class KorisniciResource {
             Logger.getLogger(KorisnicisResource.class.getName()).log(Level.SEVERE, null, ex);
         }
         Korisnik korisnik = new Korisnik();
+        korisnik.setId(0);
         
         try {
             Statement statement = Helper.getStatement(SlusacAplikacije.getContext());
-            String sql = "SELECT id, korime, ime, prezime FROM korisnici WHERE korime='" + this.korisnickoIme + "'";
-            ResultSet rs = statement.executeQuery(sql);    
+            String sql = "SELECT id, korime, ime, prezime, pass FROM korisnici WHERE korime='" + this.korisnickoIme + "'";
+            ResultSet rs = statement.executeQuery(sql);            
             
-            while (rs.next()){
+            while (rs.next()) {
                 korisnik.setId(rs.getInt("id"));
                 korisnik.setKorisnickoIme(rs.getString("korime"));
                 korisnik.setIme(rs.getString("ime"));
                 korisnik.setPrezime(rs.getString("prezime"));
+                korisnik.setPassword(rs.getString("pass"));
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(KorisniciResource.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,16 +85,22 @@ public class KorisniciResource {
         
         JsonObjectBuilder job = Json.createObjectBuilder();
         
-        job.add("uid", korisnik.getId());
-        job.add("korime", korisnik.getKorisnickoIme());
-        job.add("ime", korisnik.getIme());
-        job.add("prezime", korisnik.getPrezime());
+        if (korisnik.getId() != 0) {
+            job.add("uid", korisnik.getId());
+            job.add("korime", korisnik.getKorisnickoIme());
+            job.add("ime", korisnik.getIme());
+            job.add("prezime", korisnik.getPrezime());
+            job.add("pass", korisnik.getPassword());
+        } else {
+            job.add("greska", "0");
+        }
         
         return job.build().toString();
     }
 
     /**
      * PUT method for updating or creating an instance of KorisniciResource
+     *
      * @param content representation for the resource
      */
     @PUT
