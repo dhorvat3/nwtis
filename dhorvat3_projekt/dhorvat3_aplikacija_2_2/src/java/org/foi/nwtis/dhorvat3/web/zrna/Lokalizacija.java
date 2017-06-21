@@ -86,6 +86,24 @@ public class Lokalizacija implements Serializable {
     public Object registracija() {
         return "RegistracijaKorisnika";
     }
+    
+    public Object socket() {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        Map<String, Object> sessionMap = context.getSessionMap();
+        Object korisnik = sessionMap.get("korisnik");
+        if (korisnik == null)
+            return "NijePrijavljen";
+        return "PregledSocket";
+    }
+    
+    public Object iot() {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        Map<String, Object> sessionMap = context.getSessionMap();
+        Object korisnik = sessionMap.get("korisnik");
+        if (korisnik == null)
+            return "NijePrijavljen";
+        return "PregledIoT";
+    }
 
     public Object prijava() {
         return "PrijavaKorisnika";
@@ -96,6 +114,11 @@ public class Lokalizacija implements Serializable {
     }
     
     public Object korisnici() {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        Map<String, Object> sessionMap = context.getSessionMap();
+        Object korisnik = sessionMap.get("korisnik");
+        if (korisnik == null)
+            return "NijePrijavljen";
         return "PregledKorisnika";
     }
 }

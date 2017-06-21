@@ -29,6 +29,7 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(org.foi.nwtis.dhorvat3.rest.serveri.KorisniciResource.class);
         resources.add(org.foi.nwtis.dhorvat3.rest.serveri.KorisnicisResource.class);
         resources.add(org.foi.nwtis.dhorvat3.rest.serveri.UredajisResource.class);
     }

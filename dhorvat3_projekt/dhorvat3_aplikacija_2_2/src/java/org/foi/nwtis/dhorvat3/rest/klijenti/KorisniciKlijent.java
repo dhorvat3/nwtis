@@ -39,8 +39,8 @@ public class KorisniciKlijent {
             return webTarget.path("noviKorisnik").request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON), String.class);
         }
 
-    public <T> T azurirajKorisnika(Object requestEntity, Class<T> responseType) throws ClientErrorException {
-        return webTarget.path("azurirajKorisnika").request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON), responseType);
+    public String azurirajKorisnika(Object requestEntity) throws ClientErrorException {
+        return webTarget.path("azurirajKorisnika").request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON), String.class);
     }
 
     public String getJson() throws ClientErrorException {

@@ -23,10 +23,31 @@
                         <h:commandLink type="button" class="btn btn-primary" value="#{m.manu_prijava}" action="#{lokalizacija.prijava}" />
                         <h:commandLink type="button" class="btn btn-primary" value="#{m.manu_odjava}" action="#{lokalizacija.odjava()}" />
                         <h:commandLink type="button" class="btn btn-primary" value="#{m.manu_registracija}" action="#{lokalizacija.registracija}"/>
+                        <h:commandLink type="button" class="btn btn-primary" value="#{m.manu_socket}" action="#{lokalizacija.socket}" />
+                        <h:commandLink type="button" class="btn btn-primary" value="#{m.manu_iot}" action="#{lokalizacija.iot}" />
                     </h:form>
             </div>
             <div class="container content">
                 <h1>#{m.korisnici_naslov}</h1>
+                
+                <h:form class="form-inline container">
+                    <h:outputLabel value="ID" />
+                    <h:inputText class="form-control" disabled="true" value="#{korisnici.profil.id}" />
+                    <br />
+                    <h:outputLabel value="#{m.registracija_ime}" />
+                    <h:inputText class="form-control" value="#{korisnici.profil.ime}" />
+                    <br />
+                    <h:outputLabel value="#{m.registracija_prezime}" />
+                    <h:inputText class="form-control" value="#{korisnici.profil.prezime}" />
+                    <br />
+                    <h:outputLabel value="#{m.registracija_korIme}" />
+                    <h:inputText class="form-control" value="#{korisnici.profil.korisnickoIme}" />
+                    <br />
+                    <h:outputLabel value="#{m.registracija_lozinka}" />
+                    <h:inputText class="form-control" value="#{korisnici.profil.password}" />
+                    <br />
+                    <h:commandButton class="btn btn-success" value="#{m.korisnici_gumb}" action="#{korisnici.azuriraj()}" />
+                </h:form>
                 
                 <h:dataTable class="table table-condensed" value="#{korisnici.korisnici}" id="rezultati" var="r">
                     <h:column>

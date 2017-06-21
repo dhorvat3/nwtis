@@ -151,7 +151,7 @@ public class KorisnicisResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/azurirajKorisnika")
-    public int azurirajKorisnika(final Korisnik korisnik) {
+    public String azurirajKorisnika(final Korisnik korisnik) {
         try {
             Helper.log(korisnik.getId(), 2, "REST: Ažuriranje korisnika", Helper.getStatement(SlusacAplikacije.getContext()));
         } catch (ClassNotFoundException | SQLException ex) {
@@ -159,18 +159,18 @@ public class KorisnicisResource {
         }
         try {
             if (!checkUser(korisnik.getId(), korisnik.getKorisnickoIme()) || "".equals(korisnik.getIme()) || "".equals(korisnik.getKorisnickoIme()) || "".equals(korisnik.getPrezime())) {
-                return 0;
+                return "0";
             } else {
                 Statement statement = Helper.getStatement(SlusacAplikacije.getContext());
                 String sql = "UPDATE korisnici SET korIme='" + korisnik.getKorisnickoIme() + "', ime='" + korisnik.getIme() + "', prezime='" + korisnik.getPrezime() + "', pass='" + korisnik.getPassword() + "' WHERE id=" + korisnik.getId();
                 statement.execute(sql);
 
-                return 1;
+                return "1";
             }
 
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(KorisnicisResource.class.getName()).log(Level.SEVERE, null, ex);
-            return 0;
+            return "0";
         }
     }
 
