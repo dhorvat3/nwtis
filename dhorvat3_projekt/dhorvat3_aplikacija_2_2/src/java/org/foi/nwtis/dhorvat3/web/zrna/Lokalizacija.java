@@ -104,6 +104,15 @@ public class Lokalizacija implements Serializable {
             return "NijePrijavljen";
         return "PregledIoT";
     }
+    
+    public Object pregledMail() {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        Map<String, Object> sessionMap = context.getSessionMap();
+        Object korisnik = sessionMap.get("korisnik");
+        if (korisnik == null)
+            return "NijePrijavljen";
+        return "PregledMail";
+    }
 
     public Object prijava() {
         return "PrijavaKorisnika";

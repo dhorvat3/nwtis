@@ -76,6 +76,16 @@
             <from-outcome>PregledIoT</from-outcome>
             <to-view-id>\pregledIoT.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>NijePrijavljen</from-outcome>
+            <to-view-id>\prijava.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>PregledMail</from-outcome>
+            <to-view-id>\pregledMail.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
     <navigation-rule>
         <from-view-id>/prijava.xhtml</from-view-id>
@@ -149,6 +159,16 @@
             <from-outcome>PregledIoT</from-outcome>
             <to-view-id>\pregledIoT.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>NijePrijavljen</from-outcome>
+            <to-view-id>\prijava.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>PregledMail</from-outcome>
+            <to-view-id>\pregledMail.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
     <navigation-rule>
         <from-view-id>/registracija.xhtml</from-view-id>
@@ -216,6 +236,16 @@
             <from-action>#{lokalizacija.iot}</from-action>
             <from-outcome>PregledIoT</from-outcome>
             <to-view-id>\pregledIoT.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>NijePrijavljen</from-outcome>
+            <to-view-id>\prijava.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>PregledMail</from-outcome>
+            <to-view-id>\pregledMail.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
@@ -290,6 +320,16 @@
             <from-outcome>PregledIoT</from-outcome>
             <to-view-id>\pregledIoT.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>NijePrijavljen</from-outcome>
+            <to-view-id>\prijava.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>PregledMail</from-outcome>
+            <to-view-id>\pregledMail.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
     <navigation-rule>
         <from-view-id>/socketUpravljanje.xhtml</from-view-id>
@@ -363,8 +403,18 @@
             <from-outcome>PregledIoT</from-outcome>
             <to-view-id>\pregledIoT.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>NijePrijavljen</from-outcome>
+            <to-view-id>\prijava.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>PregledMail</from-outcome>
+            <to-view-id>\pregledMail.xhtml</to-view-id>
+        </navigation-case>
     </navigation-rule>
-        <navigation-rule>
+    <navigation-rule>
         <from-view-id>/pregledIoT.xhtml</from-view-id>
         <navigation-case>
             <from-action>#{lokalizacija.pocetna}</from-action>
@@ -435,6 +485,119 @@
             <from-action>#{lokalizacija.iot}</from-action>
             <from-outcome>PregledIoT</from-outcome>
             <to-view-id>\pregledIoT.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>NijePrijavljen</from-outcome>
+            <to-view-id>\prijava.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>PregledMail</from-outcome>
+            <to-view-id>\pregledMail.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/pregledMail.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{lokalizacija.pocetna}</from-action>
+            <from-outcome>Pocetna</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.prijava}</from-action>
+            <from-outcome>PrijavaKorisnika</from-outcome>
+            <to-view-id>/prijava.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.registracija}</from-action>
+            <from-outcome>RegistracijaKorisnika</from-outcome>
+            <to-view-id>/registracija.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.odjava()}</from-action>
+            <from-outcome>Odjava</from-outcome>
+            <to-view-id>\index.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.odjava()}</from-action>
+            <from-outcome>NijePrijavljen</from-outcome>
+            <to-view-id>/prijava.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{registracija.registracija()}</from-action>
+            <from-outcome>Uspjela</from-outcome>
+            <to-view-id>/prijava.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{registracija.registracija()}</from-action>
+            <from-outcome>Neuspjela</from-outcome>
+            <to-view-id>/registracija.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.korisnici}</from-action>
+            <from-outcome>PregledKorisnika</from-outcome>
+            <to-view-id>\korisnici.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.korisnici}</from-action>
+            <from-outcome>NijePrijavljen</from-outcome>
+            <to-view-id>\prijava.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.socket}</from-action>
+            <from-outcome>PregledSocket</from-outcome>
+            <to-view-id>\socketUpravljanje.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.socket}</from-action>
+            <from-outcome>NijePrijavljen</from-outcome>
+            <to-view-id>\prijava.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.iot}</from-action>
+            <from-outcome>NijePrijavljen</from-outcome>
+            <to-view-id>\prijava.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.iot}</from-action>
+            <from-outcome>PregledIoT</from-outcome>
+            <to-view-id>\pregledIoT.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>NijePrijavljen</from-outcome>
+            <to-view-id>\prijava.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{lokalizacija.pregledMail}</from-action>
+            <from-outcome>PregledMail</from-outcome>
+            <to-view-id>\pregledMail.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{pregledPoruka.slijedecePoruke}</from-action>
+            <from-outcome>SlijedecePoruke</from-outcome>
+            <to-view-id>/pregledMail.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{pregledPoruka.prethodnePoruke}</from-action>
+            <from-outcome>PrethodnePoruke</from-outcome>
+            <to-view-id>/pregledMail.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{pregledPoruka.promjenaMape}</from-action>
+            <from-outcome>PromjenaMape</from-outcome>
+            <to-view-id>/pregledMail.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{pregledPoruka.traziPoruke}</from-action>
+            <from-outcome>FiltrirajPoruke</from-outcome>
+            <to-view-id>/pregledMail.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-action>#{pregledPoruka.brisiPoruke}</from-action>
+            <from-outcome>ObrisanePoruke</from-outcome>
+            <to-view-id>/pregledMail.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
 </faces-config>
