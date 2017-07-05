@@ -54,10 +54,12 @@ public class Iot implements Serializable {
             String[] parts = odgovor.split("}");
             uredaji.clear();
             for (String part : parts) {
-                String regex = "IoT ([1-9]{1,6}) (\"[\\w\\s]+\")";
+                System.out.println("PART: " + part);
+                String regex = "IoT ([1-9]{1,6}) \"([\\w\\s-?]+)\"";
                 Pattern pattern = Pattern.compile(regex);
                 Matcher matcher = pattern.matcher(part);
                 if(matcher.matches()){
+                    System.out.println("ID: " + matcher.group(1));
                     uredaji.add(new Izbornik(matcher.group(2), matcher.group(1)));
                 }
             }

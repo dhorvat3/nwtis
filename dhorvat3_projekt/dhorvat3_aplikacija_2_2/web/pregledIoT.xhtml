@@ -14,27 +14,27 @@
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
             <link rel="stylesheet" href="css/style.css" type="text/css"/>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-            <title>#{m.registracija_naslov}</title>
+            <title>#{m.manu_iot}</title>
         </h:head>
         <h:body>
             <div class="container">
                 <ui:include src="/menu.xhtml" />
             </div>
             <div class="container content">
-                <h1>#{m.registracija_naslov}</h1>
+                <h1>#{m.manu_iot}</h1>
 
-                <h:form>
-                    <h:selectOneListbox id="iot" value="#{iot.uredaj}">
-                        <f:selectItems value="#{iot.uredaji}" var="uredaji" itemLabel="#{uredaji.labela}" itemValue="#{uredaji.vrijednost}" />
+                <h:form id="iotForm">
+                    <h:selectOneListbox id="iot" value="#{iot.uredaj}" size="8">
+                        <f:selectItems id="iotUredaji" value="#{iot.uredaji}" var="uredaji" itemLabel="#{uredaji.labela}" itemValue="#{uredaji.vrijednost}" />
                     </h:selectOneListbox>
                 </h:form>
 
                 <h:form class="form-inline container">
                     <h:commandButton class="btn btn-success" value="#{m.IoT_ucitaj}" action="#{iot.ucitajIoT()}">
-                        <f:ajax render="iot" />
+                        <f:ajax render="iot iotUredaji iotForm" />
                     </h:commandButton>
                     <h:commandButton class="btn btn-success" value="#{m.IoT_ocisti}" action="#{iot.brisiIoT()}">
-                        <f:ajax render="iot" />
+                        <f:ajax render="iot iotUredaji iotForm" />
                     </h:commandButton>
                 </h:form>
             </div>

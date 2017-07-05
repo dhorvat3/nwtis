@@ -21,6 +21,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -111,9 +112,9 @@ public class KorisnicisResource {
         //TODO
         return Response.created(context.getAbsolutePath()).build();
     }*/
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/noviKorisnik")
+    //@Path("/noviKorisnik")
     public String noviKorisnik(final Korisnik korisnik) {
 
         System.out.println("Korisničko ime: " + korisnik.getKorisnickoIme());
@@ -150,7 +151,7 @@ public class KorisnicisResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/azurirajKorisnika")
+    //@Path("/azurirajKorisnika")
     public String azurirajKorisnika(final Korisnik korisnik) {
         try {
             Helper.log(korisnik.getId(), 2, "REST: Ažuriranje korisnika", Helper.getStatement(SlusacAplikacije.getContext()));

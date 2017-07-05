@@ -39,7 +39,7 @@ public final class Helper {
 
     public static Statement getStatement(ServletContext context) throws ClassNotFoundException, SQLException {
         BP_Konfiguracija bp_konfig = (BP_Konfiguracija) context.getAttribute("BP_Konfig");
-        String url = bp_konfig.getServerDatabase() + bp_konfig.getUserDatabase();
+        String url = bp_konfig.getServerDatabase() + bp_konfig.getUserDatabase() + "?useUnicode=yes&characterEncoding=UTF-8";
         String user = bp_konfig.getUserUsername();
         String password = bp_konfig.getUserPassword();
         Class.forName(bp_konfig.getDriverDatabase());

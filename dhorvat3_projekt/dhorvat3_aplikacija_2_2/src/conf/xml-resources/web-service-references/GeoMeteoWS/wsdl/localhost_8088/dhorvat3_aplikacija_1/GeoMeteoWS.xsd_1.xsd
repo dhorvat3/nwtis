@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2.6-1b01  svn-revision#13094. --><xs:schema xmlns:tns="http://serveri.ws.dhorvat3.nwtis.foi.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://serveri.ws.dhorvat3.nwtis.foi.org/">
+
+<xs:element name="NeuspjesnaPrijava" type="tns:NeuspjesnaPrijava"/>
+
+<xs:element name="dajAdresuZaUredaj" type="tns:dajAdresuZaUredaj"/>
+
+<xs:element name="dajAdresuZaUredajResponse" type="tns:dajAdresuZaUredajResponse"/>
+
+<xs:element name="dajNajnovijeMeteoPodatkeZaUredaj" type="tns:dajNajnovijeMeteoPodatkeZaUredaj"/>
+
+<xs:element name="dajNajnovijeMeteoPodatkeZaUredajResponse" type="tns:dajNajnovijeMeteoPodatkeZaUredajResponse"/>
+
+<xs:element name="dajNekolikoMeteoPodatakaZaUredaj" type="tns:dajNekolikoMeteoPodatakaZaUredaj"/>
+
+<xs:element name="dajNekolikoMeteoPodatakaZaUredajResponse" type="tns:dajNekolikoMeteoPodatakaZaUredajResponse"/>
+
+<xs:element name="dajZaRazdobljeMeteoPodatkeZaUredaj" type="tns:dajZaRazdobljeMeteoPodatkeZaUredaj"/>
+
+<xs:element name="dajZaRazdobljeMeteoPodatkeZaUredajResponse" type="tns:dajZaRazdobljeMeteoPodatkeZaUredajResponse"/>
+
+<xs:element name="dajZadnjeMeteoPodatkeZaUredaj" type="tns:dajZadnjeMeteoPodatkeZaUredaj"/>
+
+<xs:element name="dajZadnjeMeteoPodatkeZaUredajResponse" type="tns:dajZadnjeMeteoPodatkeZaUredajResponse"/>
+
+<xs:complexType name="dajZaRazdobljeMeteoPodatkeZaUredaj">
+<xs:sequence>
+<xs:element name="id" type="xs:int"/>
+<xs:element name="from" type="xs:long"/>
+<xs:element name="to" type="xs:long"/>
+<xs:element name="username" type="xs:string" minOccurs="0"/>
+<xs:element name="password" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="dajZaRazdobljeMeteoPodatkeZaUredajResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:meteoPodaci" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="meteoPodaci">
+<xs:sequence>
+<xs:element name="cloudsName" type="xs:string" minOccurs="0"/>
+<xs:element name="cloudsValue" type="xs:int"/>
+<xs:element name="humidityUnit" type="xs:string" minOccurs="0"/>
+<xs:element name="humidityValue" type="xs:float" minOccurs="0"/>
+<xs:element name="lastUpdate" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="precipitationMode" type="xs:string" minOccurs="0"/>
+<xs:element name="precipitationUnit" type="xs:string" minOccurs="0"/>
+<xs:element name="precipitationValue" type="xs:float" minOccurs="0"/>
+<xs:element name="pressureUnit" type="xs:string" minOccurs="0"/>
+<xs:element name="pressureValue" type="xs:float" minOccurs="0"/>
+<xs:element name="sunRise" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="sunSet" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="temperatureMax" type="xs:float" minOccurs="0"/>
+<xs:element name="temperatureMin" type="xs:float" minOccurs="0"/>
+<xs:element name="temperatureUnit" type="xs:string" minOccurs="0"/>
+<xs:element name="temperatureValue" type="xs:float" minOccurs="0"/>
+<xs:element name="visibility" type="xs:string" minOccurs="0"/>
+<xs:element name="weatherIcon" type="xs:string" minOccurs="0"/>
+<xs:element name="weatherNumber" type="xs:int"/>
+<xs:element name="weatherValue" type="xs:string" minOccurs="0"/>
+<xs:element name="windDirectionCode" type="xs:string" minOccurs="0"/>
+<xs:element name="windDirectionName" type="xs:string" minOccurs="0"/>
+<xs:element name="windDirectionValue" type="xs:float" minOccurs="0"/>
+<xs:element name="windSpeedName" type="xs:string" minOccurs="0"/>
+<xs:element name="windSpeedValue" type="xs:float" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="NeuspjesnaPrijava">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+<xs:element name="rootCause" type="tns:throwable" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="throwable">
+<xs:sequence>
+<xs:element name="stackTrace" type="tns:stackTraceElement" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="stackTraceElement" final="extension restriction">
+<xs:sequence/>
+</xs:complexType>
+
+<xs:complexType name="dajNekolikoMeteoPodatakaZaUredaj">
+<xs:sequence>
+<xs:element name="id" type="xs:int"/>
+<xs:element name="n" type="xs:int"/>
+<xs:element name="username" type="xs:string" minOccurs="0"/>
+<xs:element name="password" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="dajNekolikoMeteoPodatakaZaUredajResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:meteoPodaci" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="dajNajnovijeMeteoPodatkeZaUredaj">
+<xs:sequence>
+<xs:element name="id" type="xs:int"/>
+<xs:element name="username" type="xs:string" minOccurs="0"/>
+<xs:element name="password" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="dajNajnovijeMeteoPodatkeZaUredajResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:meteoPodaci" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="dajZadnjeMeteoPodatkeZaUredaj">
+<xs:sequence>
+<xs:element name="id" type="xs:int"/>
+<xs:element name="username" type="xs:string" minOccurs="0"/>
+<xs:element name="password" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="dajZadnjeMeteoPodatkeZaUredajResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:meteoPodaci" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="dajAdresuZaUredaj">
+<xs:sequence>
+<xs:element name="lattitude" type="xs:float"/>
+<xs:element name="longitude" type="xs:float"/>
+<xs:element name="username" type="xs:string" minOccurs="0"/>
+<xs:element name="password" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="dajAdresuZaUredajResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

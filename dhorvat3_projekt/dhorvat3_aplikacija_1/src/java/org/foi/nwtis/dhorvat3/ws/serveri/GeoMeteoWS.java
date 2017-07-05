@@ -96,7 +96,9 @@ public class GeoMeteoWS {
             int idKorisnik = Helper.dohvatiId(username, password, statement);
             Helper.log(idKorisnik, 2, "SOAP: Daj nekoliko za id: " + id + " n: " + n, statement);
 
-            String sql = "SELECT * FROM meteo WHERE id=" + id + " ORDER BY id DESC FETCH FIRST " + n + " ROWS ONLY";
+            //String sql = "SELECT * FROM meteo WHERE id=" + id + " ORDER BY id DESC FETCH FIRST " + n + " ROWS ONLY";
+            String sql = "SELECT * FROM meteo WHERE id=" + MeteoHelper.dajIdLokacije(id, statement) + " ORDER BY id DESC LIMIT " + n;
+            System.out.println("SQL " + sql);
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 MeteoPodaci meteoPodaci = new MeteoPodaci();

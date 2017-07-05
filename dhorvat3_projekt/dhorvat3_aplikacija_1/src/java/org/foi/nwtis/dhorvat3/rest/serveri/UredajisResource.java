@@ -5,11 +5,14 @@
  */
 package org.foi.nwtis.dhorvat3.rest.serveri;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -22,9 +25,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.foi.nwtis.dhorvat3.rest.klijenti.GMKlijent;
 import org.foi.nwtis.dhorvat3.socket.helper.Helper;
 import org.foi.nwtis.dhorvat3.web.podaci.Lokacija;
 import org.foi.nwtis.dhorvat3.web.podaci.Uredaj;
@@ -117,61 +122,64 @@ public class UredajisResource {
         //TODO
         return Response.created(context.getAbsolutePath()).build();
     }*/
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/noviUredaj")
-    public int noviUredaj(final Uredaj uredaj) {
-        if ("".equals(uredaj.getNaziv()) || "".equals(uredaj.getGeoloc().getLatitude()) || "".equals(uredaj.getGeoloc().getLongitude())) {
-            return 0;
+    //@Path("/noviUredaj")
+    public String noviUredaj(final Uredaj uredaj) {
+        if ("".equals(uredaj.getNaziv()) || "".equals(uredaj.getAdresa())) {
+            return "0";
         } else {
             try {
                 if (checkName(uredaj.getNaziv())) {
                     Statement statement = Helper.getStatement(SlusacAplikacije.getContext());
                     uredaj.setId(Helper.getMaxId("uredaji", Helper.getStatement(SlusacAplikacije.getContext())));
-                    String sql = "INSERT INTO uredaji(id, naziv, vrijeme_kreiranja, id_adresa) VALUES ("+ uredaj.getId() +", '"+ uredaj.getNaziv() +"', now(), "+ getIdAdrese(uredaj.getAdresa(), uredaj.getGeoloc().getLatitude(), uredaj.getGeoloc().getLongitude()) +")";
+                    String sql = "INSERT INTO uredaji(id, naziv, vrijeme_kreiranja, id_adresa) VALUES ("+ uredaj.getId() +", '"+ uredaj.getNaziv() +"', now(), "+ getIdAdrese(uredaj.getAdresa()) +")";
                     int uspijesno = statement.executeUpdate(sql);
                     
                     if(uspijesno != 0){
                         Helper.log(1, 2, "REST: Novi uredaj", Helper.getStatement(SlusacAplikacije.getContext()));
-                        return 1;
+                        return "1";
                     } else
-                        return 0;
+                        return "0";
                                 
                 } else {
-                    return 0;
+                    return "0";
                 }
-            } catch (SQLException | ClassNotFoundException ex) {
+            } catch (SQLException | ClassNotFoundException | UnsupportedEncodingException ex) {
                 Logger.getLogger(UredajisResource.class.getName()).log(Level.SEVERE, null, ex);
-                return 0;
+                return "0";
             }
         }
     }
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/azurirajUredaj")
-    public int azurirajUredaj(final Uredaj uredaj){
+    //@Path("/azurirajUredaj")
+    public String azurirajUredaj(final Uredaj uredaj){
+        System.out.println("id: " + uredaj.getId());
+        System.out.println("Naziv: " + uredaj.getNaziv());
+        System.out.println("Adresa: " + uredaj.getAdresa());
         try{
             Helper.log(1, 2, "REST: Azuriraj uredaj", Helper.getStatement(SlusacAplikacije.getContext()));
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(UredajisResource.class.getName()).log(Level.SEVERE, null, ex);
         }
         try{
-            if(!checkUredaj(uredaj.getId(), uredaj.getNaziv()) || "".equals(uredaj.getGeoloc().getLatitude()) || "".equals(uredaj.getGeoloc().getLongitude())){
-                return 0;
+            if(!checkUredaj(uredaj.getId(), uredaj.getNaziv())){
+                return "0";
             } else {
                 Statement statement = Helper.getStatement(SlusacAplikacije.getContext());
-                String sql = "UPDATE uredaji SET naziv='"+ uredaj.getNaziv() +"', id_adresa="+ getIdAdrese(uredaj.getAdresa(), uredaj.getGeoloc().getLatitude(), uredaj.getGeoloc().getLongitude()) +" WHERE id=" + uredaj.getId();
+                String sql = "UPDATE uredaji SET naziv='"+ uredaj.getNaziv() +"', id_adresa="+ getIdAdrese(uredaj.getAdresa()) +" WHERE id=" + uredaj.getId();
                 int uspjesno = statement.executeUpdate(sql);
                 
                 if(uspjesno != 0)
-                    return 1;
+                    return "1";
                 else 
-                    return 0;
+                    return "0";
             }
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (ClassNotFoundException | SQLException | UnsupportedEncodingException ex) {
             Logger.getLogger(UredajisResource.class.getName()).log(Level.SEVERE, null, ex);
-            return 0;
+            return "0";
         }
     }
 
@@ -215,16 +223,23 @@ public class UredajisResource {
         return id == 0;
     }
     
-    private int getIdAdrese(String adresa, String latitude, String longitude) throws ClassNotFoundException, SQLException{
+    private int getIdAdrese(String adresa) throws ClassNotFoundException, SQLException, UnsupportedEncodingException{
         int id = 0;
+        //adresa = new String(adresa.getBytes("UTF-8"), "ISO-8859-1");
+        byte[] b = adresa.getBytes("UTF-8");
+        //adresa = new String(adresa.getBytes("ISO-8859-1"), "UTF-8");
+        System.out.println("Adresa parse: " + new String(b, Charset.forName("UTF-8")));
         Statement statement = Helper.getStatement(SlusacAplikacije.getContext());
-        String sqlAdrese = "SELECT * FROM adrese WHERE adresa='"+ adresa +"'";
+        String sqlAdrese = "SELECT * FROM adrese WHERE adresa LIKE '"+ adresa +"'";
+        System.out.println("SQL: " + sqlAdrese);
         ResultSet rs = statement.executeQuery(sqlAdrese);
         while(rs.next())
             id = rs.getInt("id");
         if(id == 0){
-            String sqlInsert = "INSERT INTO adrese(adresa, latitude, longitude) VALUES ('"+ adresa +"', "+ latitude +", "+ longitude +")";
-            statement.executeUpdate(sqlInsert);
+            GMKlijent gmk = new GMKlijent();
+            Lokacija lokacija = gmk.getGeoLocation(adresa);
+            String sqlInsert = "INSERT INTO adrese(adresa, latitude, longitude) VALUES ('"+ adresa +"', "+ lokacija.getLatitude() +", "+ lokacija.getLongitude() +")";
+            statement.executeUpdate(sqlInsert, Statement.RETURN_GENERATED_KEYS);
             ResultSet rsInsert = statement.getGeneratedKeys();
             if(rsInsert.next())
                 id = rsInsert.getInt(1);

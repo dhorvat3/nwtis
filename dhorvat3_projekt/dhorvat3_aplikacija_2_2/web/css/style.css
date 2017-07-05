@@ -16,3 +16,8 @@ and open the template in the editor.
     margin-right: 10px;
     margin-left: 5px;
 }
+
+.sum-text{
+    font-size: 18px;
+    font-weight: bold;
+}

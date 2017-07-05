@@ -52,4 +52,16 @@ public class MeteoHelper {
         
         return lokacije;
     }
+    
+    public static int dajIdLokacije(int id, Statement statement) throws SQLException {
+        ResultSet rs;
+        String query = "SELECT * FROM uredaji WHERE id=" + id;
+        rs = statement.executeQuery(query);
+        int idAdresa = 0;
+        while(rs.next()){
+            idAdresa = rs.getInt("id_adresa");
+        }
+        
+        return idAdresa;
+    }
 }
