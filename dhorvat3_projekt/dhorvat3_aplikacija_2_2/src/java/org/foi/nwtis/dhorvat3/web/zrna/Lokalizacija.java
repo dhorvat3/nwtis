@@ -139,4 +139,13 @@ public class Lokalizacija implements Serializable {
             return "NijePrijavljen";
         return "PregledKorisnika";
     }
+    
+    public Object dnevnik() {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        Map<String, Object> sessionMap = context.getSessionMap();
+        Object korisnik = sessionMap.get("korisnik");
+        if (korisnik == null)
+            return "NijePrijavljen";
+        return "PregledDnevnika";
+    }
 }
